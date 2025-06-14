@@ -1,0 +1,5 @@
+Hi {{ username }},
+
+Please verify your email address by entering the following code:
+
+{{ verification_code }}

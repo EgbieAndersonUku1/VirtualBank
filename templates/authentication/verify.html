@@ -1,0 +1,76 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{% static 'css/css.css' %}">
+    <title> Verify authentication</title>
+</head>
+
+
+<body>
+    
+    <main>
+
+        <section class="authentication">
+
+            <div class="container">
+
+
+                <div class="form">
+
+                    <div class="center" id="site-title">
+                        <p>VFlix</p>
+                    </div>
+                    <div class="logo center grid">
+                        <img src="{% static "/images/authentication/authentication.jpg" %}" alt="" srcset="" class="authentication-logo">
+
+                    </div>
+                    <div class="authentication_type center grid">
+                        <p class="info">Verify your account</p>
+                    </div>
+                  
+
+                    <form action="" method="post" class="grid authentication-form-div center">
+                      
+                         {% csrf_token %}                       
+                        <div class="flex-verification-grid" id="verification-grid-input">
+
+                            <input type="text" name="first-char" id="first-char" class="verification-char" maxlength="1" required>
+                            <input type="text" name="second-char" id="second-char" class="verification-char" maxlength="1" required>
+                            <input type="text" name="third-char" id="third-char" class="verification-char" maxlength="1">
+                            <input type="text" name="fourth-char" id="fourth-char" class="verification-char" maxlength="1">
+                            <input type="text" name="fifth-char" id="fifth-char" class="verification-char" maxlength="1">
+                            <input type="text" name="sixth-char" id="sixth-char" class="verification-char" maxlength="1">
+                            <input type="text" name="seventh-char" id="seventh-char" class="verification-char" maxlength="1">
+                            <input type="text" name="eighth-char" id="eighth-char" class="verification-char" maxlength="1">
+                            <input type="text" name="ninth-char" id="ninth-char" class="verification-char" maxlength="1">
+                        </div>
+
+
+                        <button class="btn-medium text-upper verify-btn" type="submit">Verify code</button>                        
+
+                    </form>
+
+                </div>
+
+
+
+            </div>
+
+
+
+
+
+        </section>
+
+
+
+    </main>
+
+<script type="module" src="{% static 'js/verify.js'  %}"></script>
+</body>
+</html>

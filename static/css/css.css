@@ -1,0 +1,165 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+*{
+    box-sizing: border-box;
+    padding: 0;
+    border: 0;
+    margin: 0;
+
+}
+
+
+
+h1, h2, h3, h4, h5, h6 {
+    padding: 0;
+    margin: 0;
+}
+
+
+body {
+    font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+.dark-blue {
+    background: var(--primary-blue-color);
+    color: white;
+}
+
+
+/* variables */
+.two-column-60_40 {
+    display: grid;
+    grid-template-columns: 70% 30%;
+    grid-template-rows: auto;
+    column-gap: 10px;
+    overflow: hidden;
+}
+
+.center {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+:root {
+    
+    --font-size-md: 2rem;
+    --font-size-lg: 3rem;
+    --font-size-sm: 0.85rem;
+    --font-size-xs: 0.45rem;
+
+
+    --primary-blue-color: #1e1eab;
+    --white-color: #fffff
+    
+}
+
+
+
+
+.authentication__picture {
+    position: relative;
+    height: 100vh;
+
+}
+
+.authentication_img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+.grid {
+    display: grid;
+}
+
+
+input {
+    height: 34px;
+    border: 2px solid lavender;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    font-weight: 300;
+    padding: 4px;
+}
+
+.authentication-form-div {
+    padding: 40px;
+}
+
+
+.btn-medium {
+    height: 50px;
+    cursor: pointer;
+}
+
+.authentication-logo {
+    height: 200px;
+    width: 250px;
+}
+
+
+#site-title {
+    font-size: var(--font-size-md);
+}
+
+label {
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.info {
+    text-transform: capitalize;
+}
+
+
+.text-upper {
+    text-transform: uppercase;
+}
+
+#id_confirm_password_error {
+    font-size: var(--font-size-sm);
+    color: red;;
+}
+
+
+/* authentication buttons */
+
+#register-btn {
+    background: var(--primary-blue-color);
+    color: var(--white-color);
+}
+
+
+
+.flex-verification-grid {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: auto;
+    column-gap: 8px;
+}
+
+.flex-verification-grid input  {
+    height: 100px;
+    border: 2px solid lavender;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    font-weight: 300;
+    padding: 4px;
+    width: 150px;
+    text-align: center;
+    font-size: 3rem;
+    text-transform: uppercase;
+    
+}
+
+.verify-btn {
+    width: 20%;
+    margin: auto;
+}

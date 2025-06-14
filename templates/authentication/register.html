@@ -1,0 +1,28 @@
+{% extends "partials/authentication/base.html" %}
+
+{% load static %}
+
+{% block title %} Register {% endblock title %}
+
+
+{% block body %}
+    
+    <div class="authentication_type center grid">
+        <p class="info">Register to use the site</p>
+        <small>Already have an account. Click <a href="{% url 'login' %}">here?</a></small>
+    </div>
+
+    <form action="{% url 'register' %}" method="post" class="grid authentication-form-div">
+
+        {% csrf_token %}
+
+        {% for field in form %}
+            {{ field.as_field_group }}
+        {% endfor %}
+      
+        <button class="btn-medium text-upper" type="submit" id="register-btn">Register</button>
+
+    </form>
+
+
+{% endblock body %}

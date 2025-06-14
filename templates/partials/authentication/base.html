@@ -1,0 +1,54 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{% static 'css/css.css' %}">
+    <title> {% block title %}{% endblock title %}</title>
+</head>
+<body>
+    
+    <main>
+
+        <section class="authentication">
+
+            <div class="container two-column-60_40">
+
+
+                <div class="authentication__picture">
+                    <div class="tint"></div>
+                    <img src="{% static "/images/authentication/login.jpg" %}" alt="" srcset="" class="authentication_img">
+
+                </div>
+
+
+                <div class="form">
+
+                    <div class="center" id="site-title">
+                        <p>EU Banking</p>
+                    </div>
+                    <div class="logo center grid">
+                        <img src="{% static "/images/authentication/authentication.jpg" %}" alt="" srcset="" class="authentication-logo">
+
+                    </div>
+
+                    {% block body %}{% endblock body %}
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+</body>
+
+
+{% block sript %}{% endblock sript %}
+</html>
