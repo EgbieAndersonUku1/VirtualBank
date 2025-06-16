@@ -16,17 +16,27 @@ from dotenv import load_dotenv
 from os.path import join
 from os import getenv
 
-load_dotenv()
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(dotenv_path=BASE_DIR / ".env", override=True) 
+
+
 TEMPLATES_DIRS = join(BASE_DIR, "templates")
+
+# custom user setting
+AUTH_USER_MODEL = 'authentication.User'
+
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-n7zhxp+&x#(gln7y1sisx%tx-uc!mn!h*rt7u&e_37b&1p5b+9'
+SECRET_KEY = 'django-insecure-n7zhxp+&x#(gln7y1sisx%tx-uc!mn!h*rt7u&e_37b&1p5b+975842'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -175,6 +185,8 @@ EMAIL_USE_TLS        = True
 EMAIL_HOST_USER      = getenv("EMAIL_HOST_USER") 
 EMAIL_HOST_PASSWORD  = getenv("EMAIL_HOST_PASSWORD") 
 DEFAULT_FROM_EMAIL   = EMAIL_HOST_USER  
+
+
 
 
 # static files for 

@@ -7,6 +7,8 @@
 
 {% block body %}
     
+    {% include "partials/messages/messages.html" %}
+    
     <div class="authentication_type center grid">
         <p class="info">Register to use the site</p>
         <small>Already have an account. Click <a href="{% url 'login' %}">here?</a></small>
