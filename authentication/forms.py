@@ -67,6 +67,93 @@ class VerificationModelAdminForm(forms.ModelForm):
         if len(code) != required_length:
             raise forms.ValidationError(f"Code must be exactly {required_length} characters long.")
         return code
+  
+  
+class VerifyEmailForm(forms.Form):
+    first_char = forms.CharField(
+        max_length=1,
+        min_length=1,
+        widget=forms.TextInput(attrs={
+            'id': 'first-char',
+            'class': 'verification-char',
+            'maxlength': '1',
+            'required': True,
+        })
+    )
+    second_char = forms.CharField(
+        max_length=1,
+        min_length=1,
+        widget=forms.TextInput(attrs={
+            'id': 'second-char',
+            'class': 'verification-char',
+            'maxlength': '1',
+            'required': True,
+        })
+    )
+    third_char = forms.CharField(
+        max_length=1,
+        min_length=1,
+        widget=forms.TextInput(attrs={
+            'id': 'third-char',
+            'class': 'verification-char',
+            'maxlength': '1',
+        })
+    )
+    fourth_char = forms.CharField(
+        max_length=1,
+        min_length=1,
+        widget=forms.TextInput(attrs={
+            'id': 'fourth-char',
+            'class': 'verification-char',
+            'maxlength': '1',
+        })
+    )
+    fifth_char = forms.CharField(
+        max_length=1,
+        min_length=1,
+        widget=forms.TextInput(attrs={
+            'id': 'fifth-char',
+            'class': 'verification-char',
+            'maxlength': '1',
+        })
+    )
+    sixth_char = forms.CharField(
+        max_length=1,
+        min_length=1,
+        widget=forms.TextInput(attrs={
+            'id': 'sixth-char',
+            'class': 'verification-char',
+            'maxlength': '1',
+        })
+    )
+    seventh_char = forms.CharField(
+        max_length=1,
+        min_length=1,
+        widget=forms.TextInput(attrs={
+            'id': 'seventh-char',
+            'class': 'verification-char',
+            'maxlength': '1',
+        })
+    )
+    eighth_char = forms.CharField(
+        max_length=1,
+        min_length=1,
+        widget=forms.TextInput(attrs={
+            'id': 'eighth-char',
+            'class': 'verification-char',
+            'maxlength': '1',
+        })
+    )
+    ninth_char = forms.CharField(
+        max_length=1,
+        min_length=1,
+        widget=forms.TextInput(attrs={
+            'id': 'ninth-char',
+            'class': 'verification-char',
+            'maxlength': '1',
+        })
+    )
+
     
 
 

@@ -8,12 +8,15 @@ from django_email_sender.email_sender_constants import LoggerType
 from django.conf import settings
 from django.contrib import messages
 
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, VerifyEmailForm
 from .models import Verification, EmailLogger
+
+from .views_helper import extract_code_from_verification_form, send_verification_email, resend_verification_email
 
 # Create your views here.
 
 def home(request):
+    # change this later but for now use register form
     return render(request, "authentication/register.html")
 
 
@@ -26,33 +29,14 @@ def register(request):
         form = RegisterForm(request.POST)
         
         if form.is_valid():
-           
-            logger = logging.getLogger("email_sender")
-            
+                       
             verification = Verification()
             
-            user = form.save(commit=False)
+            user             = form.save(commit=False)
             verification_link = request.build_absolute_uri(reverse('verify_registration_code', args=[user.username]))
             
-            email = EmailSenderLogger.create()
-            (
-            
-                email.add_email_sender_instance(EmailSender.create())
-                .config_logger(log_level=LoggerType.INFO, logger=logger)
-                .add_log_model(EmailLogger)
-                .enable_email_meta_data_save()
-                .start_logging_session()
-                .from_address(settings.EMAIL_HOST_USER)
-                .to(user.email)
-                .with_subject("Verify your email")
-                .with_context({"username": user.username, "verification_code": verification.code, "verification_link": verification_link})
-                .with_html_template("emails/register.html")
-                .with_text_template("emails/register.txt")
-                .send()
-            )
-
-            
-
+            email = send_verification_email(user=user, verification=verification, url=verification_link)
+           
             if email.is_email_sent:
                 user.save()
                 verification.user = user
@@ -74,4 +58,30 @@ def login(request):
 
 
 def verify_registration_code(request, username):
-    return render(request, "authentication/verify.html")
+    
+    context   = {}
+    form      = VerifyEmailForm()
+    error_msg = None
+    
+    if request.method == "POST":
+        form = VerifyEmailForm(request.POST)
+        
+        if form.is_valid():
+            code = extract_code_from_verification_form(form)  
+            
+            verification = Verification.get_by_username_and_code(username, code)
+
+            if not verification:
+                error_msg = "The code entered is invalid"
+            elif verification.is_code_expired:
+                error_msg = "The code has expired. Another one has been sent to your email"
+            
+         
+            # to add more here
+        
+    context = {
+        "form": VerifyEmailForm,
+        "username": username,
+        "error_msg": error_msg
+    }
+    return render(request, "authentication/verify.html", context=context)
