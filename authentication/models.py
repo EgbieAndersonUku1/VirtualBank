@@ -87,8 +87,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             return None
         
    
-        
-
 class Verification(models.Model):
     
     user                   = models.ForeignKey(User, on_delete=models.CASCADE, related_name="verification")
@@ -112,7 +110,7 @@ class Verification(models.Model):
         return self.user.full_name
         
     @classmethod
-    def get_by_username_and_code(cls, code, username):
+    def get_by_username_and_code(cls, code: str, username: str):
         
         if not code or not username:
             return None
@@ -121,8 +119,21 @@ class Verification(models.Model):
         except cls.DoesNotExist:
             return None
 
+    def regenerate_code(self):
+        self.code = generate_code()
+        self.save()
+
+    def set_email_to_verified(self):
+        self.user.is_email_verified = True
+        self.user.save()
+
+    def set_email_to_unverified(self):
+        self.user.is_email_verified = False
+        self.user.save()
+
+    @property
     def is_code_expired(self):
-        return timezone.now() > self.verify_by
+        return not self.verify_by > timezone.now()
        
     def save(self, *args, **kwargs):
         

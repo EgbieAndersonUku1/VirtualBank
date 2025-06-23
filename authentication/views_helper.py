@@ -34,7 +34,15 @@ def resend_verification_email(user: User,
                               verification: Verification, 
                               url: str, 
                               subject: str = "Expired code, please verify your email again"):
-    pass
+    
+    return _send_email_helper(subject=subject,
+                              html_template="emails/expired_email.html",
+                              text_template="emails/expired_email.txt",
+                              user=user,
+                              verification=verification,
+                              verification_link=url
+                              )
+    
 
 
 
@@ -51,7 +59,8 @@ def _send_email_helper(subject : str,
     if not isinstance(verification, Verification):
         raise ValueError(f"The verification is not an instance of User. Expected a user instance but got type {type(verification)}")    
     
-    
+    verification.description = subject
+
     email = EmailSenderLogger.create()
     (
             

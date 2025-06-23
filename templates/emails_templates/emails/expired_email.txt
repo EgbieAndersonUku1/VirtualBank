@@ -1,0 +1,14 @@
+Subject: New Verification Code Sent
+
+Hi {{ username }},
+
+Your previous verification code has expired, but don’t worry — we’ve sent you a new one.
+
+Please verify your email address by entering the following code:
+
+{{ verification_code }}
+
+Or click the link below to verify directly:
+{{ verification_link }}
+
+If you didn’t request this, you can safely ignore this email.

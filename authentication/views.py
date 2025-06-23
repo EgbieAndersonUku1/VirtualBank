@@ -2,16 +2,17 @@ import logging
 
 from django.shortcuts import redirect, render
 from django.urls import reverse
-from django_email_sender.email_logger import EmailSenderLogger
-from django_email_sender.email_sender import EmailSender
-from django_email_sender.email_sender_constants import LoggerType
 from django.conf import settings
 from django.contrib import messages
 
+from .models import Verification
 from .forms import RegisterForm, LoginForm, VerifyEmailForm
-from .models import Verification, EmailLogger
+from .views_helper import (extract_code_from_verification_form, 
+                           send_verification_email, 
+                           resend_verification_email
+                           )
 
-from .views_helper import extract_code_from_verification_form, send_verification_email, resend_verification_email
+from .utils.utils import create_verification_url
 
 # Create your views here.
 
@@ -32,8 +33,8 @@ def register(request):
                        
             verification = Verification()
             
-            user             = form.save(commit=False)
-            verification_link = request.build_absolute_uri(reverse('verify_registration_code', args=[user.username]))
+            user              = form.save(commit=False)
+            verification_link =  create_verification_url(request, user.username)
             
             email = send_verification_email(user=user, verification=verification, url=verification_link)
            
@@ -51,6 +52,8 @@ def register(request):
 
 def login(request):
     form   = LoginForm()
+
+    # add the code to login in
     context = {
         "form": form
     }
@@ -68,20 +71,36 @@ def verify_registration_code(request, username):
         
         if form.is_valid():
             code = extract_code_from_verification_form(form)  
-            
-            verification = Verification.get_by_username_and_code(username, code)
+    
+            verification = Verification.get_by_username_and_code(code, username)
 
             if not verification:
                 error_msg = "The code entered is invalid"
+                messages.add_message(request, messages.ERROR, error_msg)
+
+            elif not verification and request.user.is_authenticated:
+                messages.add_message(request, messages.ERROR, "You verification code has already been verified")
+
             elif verification.is_code_expired:
                 error_msg = "The code has expired. Another one has been sent to your email"
+                messages.add_message(request, messages.ERROR, error_msg)
+
+                verification.regenerate_code()
+                resend_verification_email(user=verification.user, 
+                                          verification=verification,
+                                          url=create_verification_url(request, verification.user.username)
+                                          )
+
+            else:
+                verification.set_email_to_verified()
+                verification.delete()
+                messages.add_message(request, messages.SUCCESS, "You have successfully verified your email address")
+                return redirect(reverse("login"))
             
-         
-            # to add more here
         
     context = {
         "form": VerifyEmailForm,
         "username": username,
-        "error_msg": error_msg
+      
     }
     return render(request, "authentication/verify.html", context=context)
