@@ -2,6 +2,7 @@
 # -------------------------------------------------------------------
 # utils.py  
 #--------------------------------------------------------------------
+
 import logging
 
 class RightIndentedFormatter(logging.Formatter):
@@ -14,4 +15,3 @@ class RightIndentedFormatter(logging.Formatter):
         original_message = super().format(record)
         return f"    {original_message}"  # 4 spaces or any amout of space you want
     
-

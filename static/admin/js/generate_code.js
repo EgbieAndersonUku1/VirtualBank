@@ -39,16 +39,16 @@ function handleGenerateButtonClick(e, codeInputField) {
 
 function createGenerateCodeButton() {
 
-    const generateCodeBtn        = document.createElement("button");
-    generateCodeBtn.id           = "gen-code-btn";
-    generateCodeBtn.style.width  = "100%";
-    generateCodeBtn.style.margin = "8px";
+    const generateCodeBtn                 = document.createElement("button");
+    generateCodeBtn.id                    = "gen-code-btn";
+    generateCodeBtn.style.width           = "100%";
+    generateCodeBtn.style.margin          = "8px";
     generateCodeBtn.style.backgroundColor = "#28a745";
     generateCodeBtn.style.color           = "white";
     generateCodeBtn.style.paddingTop      = "0.375rem";
     generateCodeBtn.style.paddingBottom   = "0.375rem";
     generateCodeBtn.style.border          = "2px solid lavender";
-    generateCodeBtn.textContent = "Generate Code";
+    generateCodeBtn.textContent           = "Generate Code";
     return generateCodeBtn;
 
 }
