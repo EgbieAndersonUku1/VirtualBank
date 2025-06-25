@@ -16,10 +16,6 @@ from .utils.utils import create_verification_url
 
 # Create your views here.
 
-def home(request):
-    # change this later but for now use register form
-    return render(request, "authentication/register.html")
-
 
 def register(request):
     

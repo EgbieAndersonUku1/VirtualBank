@@ -1,0 +1,175 @@
+{% load static %}
+
+<section id="add-account-info">
+    <div class="wrapper">
+
+        <!-- Profile Section -->
+        <div class="profile">
+            <div class="head center flex-direction-column wrap-text">
+                <img src="{% static '/images/icons/profile.png' %}" alt="Profile Image" class="profile-img">
+                <span id="account-name" class="profile-information"></span>
+                <span id="account-surname" class="profile-information"></span>
+                <span id="account-email" class="profile-information"></span>
+                <span id="account-location" class="profile-information"></span>
+                <span id="account-state" class="profile-information"></span>
+                <span id="account-postcode" class="profile-information"></span>
+                <span id="account-mobile" class="profile-information"></span>
+                <p class="status green">Active</p>
+            </div>
+
+            <hr>
+
+            <div class="body">
+                <div class="account-information">
+                    <p class="bold">Account No:</p>
+                    <p>400217 00327502</p>
+                </div>
+
+                <div class="account-information">
+                    <p class="bold">Pin:</p>
+                    <p>1025</p>
+                </div>
+
+                <div class="account-information">
+                    <p class="bold">Joined:</p>
+                    <p>01/04/2024</p>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="footer center flex-direction-column">
+                <small class="green">Logged in</small>
+                <button type="button" id="profileBtn" class="button margin-top-sm"></button>
+            </div>
+        </div>
+
+        <!-- Profile Form -->
+        <div class="profile-form">
+            <div class="head">
+                <div class="info dashboard-info">
+                    <p>Account</p>
+                    <p>Transactions</p>
+                    <p>Payments</p>
+                    <p>Security Settings</p>
+                    <p>Notifications</p>
+                </div>
+                <div class="avatar lightbox-display">
+                    <img src="{% static '/images/icons/profile.png' %}" alt="Profile Avatar" class="profile-form-img">
+                    <p>Your Avatar</p>
+                </div>
+            </div>
+
+            <div class="body">
+                <form action="" method="post" id="profile-form">
+
+                    <!-- Personal Information -->
+                    <h3>Personal Information</h3>
+                    <div class="two-column-grid">
+                        <div class="form-group flex-direction-column">
+                            <label for="first-name">First Name</label>
+                            <input type="text" id="first-name" name="firstName" required minlength="3" maxlength="50">
+                        </div>
+
+                        <div class="form-group flex-direction-column">
+                            <label for="surname">Surname</label>
+                            <input type="text" id="surname" name="surname" required minlength="3" maxlength="50">
+                        </div>
+                    </div>
+
+                    <div class="two-column-grid">
+                        <div class="form-group flex-direction-column">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required maxlength="50">
+                        </div>
+
+                        <div class="form-group flex-direction-column">
+                            <label for="mobile">Mobile</label>
+                            <input type="tel" id="mobile" name="mobile" required class="center" maxlength="11"
+                                minlength="11">
+                        </div>
+                    </div>
+
+                    <div class="two-column-grid">
+                        <div class="form-group flex-direction-column">
+                            <label for="gender">Gender</label>
+                            <select name="gender" id="gender" required>
+                                <option value="" disabled selected>Select your gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                                <option value="prefer_not_to_say">Prefer not to say</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group flex-direction-column">
+                            <label for="marital-status">Marital Status</label>
+                            <select name="maritalStatus" id="marital-status" required>
+                                <option value="" disabled selected>Select your status</option>
+                                <option value="single">Single</option>
+                                <option value="married">Married</option>
+                                <option value="divorced">Divorced</option>
+                                <option value="widowed">Widowed</option>
+                                <option value="separated">Separated</option>
+                                <option value="in_relationship">In a relationship</option>
+                                <option value="engaged">Engaged</option>
+                                <option value="civil_partnership">In a civil partnership</option>
+                                <option value="domestic_partnership">In a domestic partnership
+                                </option>
+                                <option value="complicated">It's complicated</option>
+                                <option value="prefer_not_to_say">Prefer not to say</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Location Section -->
+                    <h3>Location</h3>
+                    <div class="triple-column-grid">
+                        <div class="form-group flex-direction-column">
+                            <label for="country">Country</label>
+                            <input type="text" id="country" name="country" required minlength="4" maxlength="50">
+                        </div>
+
+                        <div class="form-group flex-direction-column">
+                            <label for="state">State</label>
+                            <input type="text" id="state" name="state" required>
+                        </div>
+
+                        <div class="form-group flex-direction-column">
+                            <label for="postcode">Postcode</label>
+                            <input type="text" id="postcode" name="postcode" required minlength="5" maxlength="7">
+                        </div>
+                    </div>
+
+                    <!-- Identification Documents -->
+                    <h3>Identification Documents</h3>
+                    <div class="two-column-grid">
+                        <div class="form-group flex-direction-column">
+                            <label for="id-type">Identity Type</label>
+                            <select name="idType" id="id-type" required>
+                                <option value="" disabled selected>Select ID type</option>
+                                <option value="driving-licence">Driving Licence</option>
+                                <option value="passport">Passport</option>
+                                <option value="national-id">National ID</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group flex-direction-column">
+                            <label for="signature">Signature</label>
+                            <select name="signature" id="signature" required>
+                                <option value="" disabled selected>Choose an option</option>
+                                <option value="upload">Upload Signature</option>
+                                <option value="draw">Draw Signature</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="flex-end margin-top-md">
+                        <button type="submit" class="button" id="formBtn">Save Changes</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

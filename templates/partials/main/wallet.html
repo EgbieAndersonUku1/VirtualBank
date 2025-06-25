@@ -1,0 +1,179 @@
+{% load static %}
+
+<section id="wallet" aria-labelledby="wallet-heading" role="region" class="margin-top-md">
+
+    <div class="wrapper padding-md">
+
+        <div class="main-body wallet-ui">
+
+            <div class="wallet-card" role="region" aria-labelledby="wallet-heading">
+                <div class="head flex-space-between">
+                    <p>Hi, <span aria-label="User's name" id="wallet__holder-name" class="wallet__holder-name"></span>
+                    </p>
+
+                    <p>Bank account amount: <span aria-label="bank-balance" id="wallet__bank-amount"
+                            class="wallet__bank-balance capitalize">£0.00</span>
+                    </p>
+                    <p>Maximum cards: <span class="wallet wallet__total-cards">0/3</span></p>
+                </div>
+
+                <hr>
+                <div class="body padding-bottom-md padding-top-md">
+                    <div class="account-balance">
+                        <p>Account Balance</p>
+                        <span id="bank-account-amount" aria-live="polite" class="wallet__wallet-amount">£0.00</span>
+                    </div>
+
+                    <div id="transactions">
+
+                        <div class="transfer">
+                            <p>Last transfer</p>
+                            <span id="last-transfer" class="amount wallet__last-transfer"
+                                aria-live="polite">£0.00</span>
+                        </div>
+
+                        <div class="received">
+                            <p>Last received</p>
+                            <span id="last-received" class="amount wallet__last-received"
+                                aria-live="polite">£0.00</span>
+                        </div>
+
+                        <div class="received">
+                            <p>Number of cards</p>
+                            <span id="wallet__number-of-cards" class="amount wallet__num-of-cards"
+                                aria-live="polite">0</span>
+                        </div>
+
+                        <div class="received">
+                            <p>Cards amount</p>
+                            <span id="total-amount-in-cards" class="amount wallet__cards-amount"
+                                aria-live="polite">£0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+                <div class="footer center">
+                    <button class="btn-medium account-btn" aria-label="Add Funds" id="add-funds">Add
+                        Funds</button>
+                    <button class="btn-medium account-btn" aria-label="Add New Card" id="add-new-card">Add New
+                        Card</button>
+                    <button class="btn-medium account-btn" aria-label="Transfer Funds" id="transfer-funds">Transfer
+                        Funds</button>
+                    <button class="btn-medium account-btn" aria-label="Remove Card" id="remove-card">Remove
+                        card</button>
+                </div>
+            </div>
+
+            <div id="my-transactions" aria-live="polite">
+                <h3 class="capitalize padding-top-md padding-bottom-sm">My transactions history</h3>
+                <p class="padding-bottom-md red">A maximum of the ten most recent transactions are
+                    displayed at any given time.</p>
+
+                <div class="transaction-table padding-top-md">
+                    <table id="transaction-history-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Description</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Created a new card</td>
+                                <td>15 Feb 2025</td>
+                                <td>N/A</td>
+                                <td>Processed</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Transferred money to another card</td>
+                                <td>15 Feb 2025</td>
+                                <td>£1000</td>
+                                <td>Processed</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Removed a card</td>
+                                <td>15 Feb 2025</td>
+                                <td>N/A</td>
+                                <td class="green">Processed</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Linked card to a new account</td>
+                                <td>16 Feb 2025</td>
+                                <td>N/A</td>
+                                <td>Completed</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>Updated billing address for the card</td>
+                                <td>17 Feb 2025</td>
+                                <td>N/A</td>
+                                <td>Approved</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>Requested a new PIN</td>
+                                <td>18 Feb 2025</td>
+                                <td>£2.50</td>
+                                <td>Processed</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>Suspended card due to fraud</td>
+                                <td>19 Feb 2025</td>
+                                <td>N/A</td>
+                                <td>Pending</td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>Unlocked card after fraud investigation</td>
+                                <td>20 Feb 2025</td>
+                                <td>N/A</td>
+                                <td>Completed</td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>Transferred rewards points to account</td>
+                                <td>21 Feb 2025</td>
+                                <td>£50 equivalent</td>
+                                <td>Completed</td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>Closed account linked to the card</td>
+                                <td>22 Feb 2025</td>
+                                <td>N/A</td>
+                                <td>Finalized</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="btn flex-end margin-top-md">
+                        <button class="btn-small" id="clear-transaction-btn">
+                            Clear Transaction history
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sides cards" role="region" aria-labelledby="linked-cards-heading" id="side-cards">
+            <h3 class="center capitalize subtitle" id="linked-cards-heading">Linked Account Cards
+            </h3>
+
+            <div class="cards" id="cards">
+
+                <!-- cards will be dynamically added -->
+
+            </div>
+        </div>
+
+    </div>
+</section>

@@ -1,0 +1,22 @@
+{% load static %}
+
+<div class="pin" id="pin">
+    <form id="pin-form" class="center">
+
+        <div class="head center margin-bottom-sm">
+            <img src="{% static '/images/icons/lock.svg' %}" alt="lock" class="pin-image-icon center" id="pin-form-icon">
+
+        </div>
+        <p class="form-error-msg red" id="pin-error-msg"></p>
+        <label for="pinInputField" class="padding-bottom-md bold capitalize center">Enter your
+            4-digit PIN:</label>
+        <input type="tel" id="pinInputField" name="pin" minlength="4" maxlength="4" aria-label="Enter your 4-digit PIN"
+            required class="center">
+
+        <div class="buttons">
+            <button type="button" id="cancel-pin">Cancel Pin</button>
+            <button type="submit" id="enter-pin">Enter Pin</button>
+        </div>
+    </form>
+
+</div>

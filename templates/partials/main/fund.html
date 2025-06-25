@@ -1,0 +1,34 @@
+{% load static %}
+
+<div id="fund">
+
+    <div class="window-close flex-end">
+        <img src="{% static '/images/icons/window-close.svg' %}" alt="Window" class="icon window-close-icon" id="fund-close-icon">
+    </div>
+
+    <h2 class="center logo">EUSBC</h2>
+    <h3 class="center capitalize green">Fund my account</h3>
+    <div class="header center">
+
+        <img src="{% static '/images/icons/credit-card.svg' %}" alt="" id="add-fund-icon">
+    </div>
+
+    <form action="" method="post" id="fund-form">
+        
+        <label for="fund-account">Choose n account to fund</label>
+        <select name="fund_account_type" id="fund-account-select-field" class="flex-direction-column" required>
+            <option value="" disabled selected>Account type</option>
+            <option value="bank-account">Bank account</option>
+            <option value="wallet">Wallet</option>
+        </select>
+
+        <div class="form-group flex-direction-column">
+            <label for="fund-card-amount">Amount</label>
+            <input type="number" name="amount" id="fund-card-amount" required step="0.01" min="0.01" max="100000000">
+        </div>
+
+        <button type="submit" id="fund-account-btn" class="margin-top-md btn-small">Fund</button>
+    </form>
+
+
+</div>
