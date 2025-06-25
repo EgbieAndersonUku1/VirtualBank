@@ -57,7 +57,7 @@ def _send_email_helper(subject : str,
         raise ValueError(f"The user is not an instance of User. Expected a user instance but got type {type(user)}")
     
     if not isinstance(verification, Verification):
-        raise ValueError(f"The verification is not an instance of User. Expected a user instance but got type {type(verification)}")    
+        raise ValueError(f"The verification is not an instance of Verification. Expected a verification instance but got type {type(verification)}")    
     
     verification.description = subject
 

@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
 *{
     box-sizing: border-box;
@@ -178,3 +179,1769 @@ label {
     background: red;
     color: white;
 }
+
+
+
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Reset margin and padding for common elements */
+body, h1, h2, h3, h4, ul, ol, li, div, section {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-roboto);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+:root {
+    --light-gray: #F5F7FA;
+    --color-one: #8D6E63 ;
+    --steel-blue: #2D3E50;
+    --darker-red: #CC0000;
+    --deep-navy-blue: #0A2540;
+    --white: #FFFFFF;
+
+    --size-xs: 4px;
+    --size-sm: 8px;
+    --size-md: 16px;
+    --size-lg: 32px;
+    --size-xl: 64px;
+    --size-xlg: 128px;
+
+    --box-shadow : rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  
+    --font-family-secondary: 'Inter', sans-serif;
+    --background-primary: linear-gradient(135deg, #6a11cb, #2575fc);
+    --background-secondary: linear-gradient(135deg, #43e97b, #38f9d7);
+    --background-tertiary: linear-gradient(135deg, #1f4037, #99f2c8);
+    --background-quaternary: linear-gradient(135deg, #ff758c, #ff7eb3);
+    --background-quinary: linear-gradient(135deg, #8e2de2, #4a00e0);
+    --background-senary: linear-gradient(135deg, #ff6a00, #ee0979);
+
+    --font-roboto: 'Roboto', Arial, sans-serif;
+    --font-poppins: "Poppins", sans-serif;
+}
+
+
+a {
+    text-decoration: none;
+    color: black;
+
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+input,
+select {
+    height: var(--size-lg);
+    border: 2px solid lavender;
+}
+
+/* fonts */
+.poppins-regular {
+    font-family: "Poppins", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+  }
+
+
+.montserrat-regular {
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+
+
+/* variables */
+
+.bold {
+    font-weight: bold;
+}
+
+.capitalize {
+    text-transform: capitalize;
+}
+
+.center {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.left-aligin {
+    text-align: left;
+}
+
+.italic {
+    font-style: italic;
+    font-weight: 300;
+}
+
+.red {
+    color: var(--darker-red);
+}
+
+.green {
+    color: darkgreen;
+}
+
+.steel-blue {
+    color: var(--steel-blue);
+}
+
+.orange {
+    color: orange;
+}
+
+
+.lighten-text {
+    opacity: 0.8;
+}
+
+.flex-direction-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-end {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.wrap-text {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.small-text {
+    font-size: 0.85rem;
+}
+
+/* padding */
+
+.padding-xsm {
+    padding: var(--size-xs);
+}
+
+.padding-sm {
+    padding: var(--size-sm);
+}
+
+.padding-md {
+    padding: var(--size-md);
+}
+
+.padding-lg {
+    padding: var(--size-lg);
+}
+
+.padding-xl {
+    padding: var(--size-lg);
+}
+
+
+.padding-top-sm {
+    padding-top: var(--size-sm);
+}
+
+.padding-bottom-sm {
+    padding-bottom: var(--size-sm);
+}
+
+.padding-top-md {
+    padding-top: var(--size-md);
+}
+
+.padding-bottom-md {
+    padding-bottom: var(--size-md);
+}
+
+/* margin */
+.margin-xsm {
+    margin: var(--size-xs);
+}
+
+.margin-sm {
+    margin: var(--size-sm);
+}
+
+.margin-md {
+    margin: var(--size-md);
+}
+
+.margin-lg {
+    margin: var(--size-lg);
+}
+
+.margin-xl {
+    margin: var(--size-lg);
+}
+
+.margin-top-lg {
+    margin-top: var(--size-lg);
+}
+
+.margin-top-sm {
+    margin-top: var(--size-sm);
+}
+
+.margin-top-md {
+    margin-top: var(--size-md);
+}
+.margin-bottom-lg {
+    margin-bottom: var(--size-lg);
+}
+
+.margin-bottom-sm {
+    margin-bottom: var(--size-sm);
+}
+
+/* display */
+.lightbox-display {
+    background: ghostwhite;
+    padding-top: var(--size-md);
+    padding-bottom: var(--size-md);
+    padding-left: var(--size-md);
+    border: 2px solid lavender;
+}
+
+.flex-space-between {
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.subtitle {
+    font-weight: 300;
+    opacity: 0.5;
+    text-transform: capitalize;
+}
+
+.two-column-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto;
+    column-gap: var(--size-sm);
+}
+
+.triple-column-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto;
+    column-gap: var(--size-sm);
+}
+
+.four-column-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto;
+    column-gap: var(--size-sm);
+}
+
+/* buttons */
+button {
+    cursor: pointer;
+}
+
+.button {
+    background: #00eaff; /* Bright cyan */
+    color: #1e1e2f; 
+    padding: var(--size-sm);
+    font-weight: bold;
+    transition: 0.3s;
+    opacity: 0.8;
+    cursor: pointer;
+    
+}
+
+.button:hover {
+    background: #6a11cb; /* Shift to purple */
+    color: white;
+    opacity: 0.8;
+}
+
+button:hover {
+    cursor: pointer;
+    transform: scale(1.02);
+}
+/* icons */
+/* nav icons */
+.nav-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.nav-icon:hover {
+    transform: scale(1.1);
+    opacity: 0.6;
+}
+
+.window-close-icon {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.window-close-icon:hover {
+    transform: rotate(360deg); 
+    transition: transform 0.3s ease-in-out; 
+}
+
+
+
+/* The virtual bank dashboard */
+#virtualbank-dashboard .container {
+    display: grid;
+    grid-template-columns: 20% 80%;
+    grid-template-rows: auto;
+   
+    height: 100vh; /* Full viewport height */
+}
+
+
+#main-body {
+    background: rgb(247, 247, 240);
+    border-left: 2px solid lavender;
+    font-family: "Montserrat", sans-serif;
+    padding: var(--size-md);
+}
+
+
+#side-dashboard {
+    cursor: pointer;
+    background: var(--steel-blue);
+
+
+    /* grid elements */
+    display: grid;
+    grid-template-columns: 20% 80%;
+    grid-template-rows: auto;
+}
+
+
+#side-dashbard .icon {
+    padding-left: var(--size-md);
+    padding-right: var(--size-md);
+}
+
+
+#side-dashboard .main-container {
+    display: flex;
+    flex-direction: column;   
+}
+
+#side-dashboard .main-container div{
+   margin: 2px;
+}
+
+
+#sidebar-icons {
+    background: rgba(0, 0, 0, 0.849);
+    padding-top: var(--size-xlg);
+    padding-left: var(--size-md);
+    padding-right: var(--size-lg);
+}
+
+
+.sidebar-icon {
+    /* sizes */
+    height: 25px;
+    width: 25px;
+
+    border-radius: 5%;
+    cursor: pointer;
+    margin-top: var(--size-md);
+    opacity: 0.5;
+}
+
+.sidebar-icon:hover {
+    transform: rotate(45deg);
+    opacity: 0.7;
+}
+
+
+
+/* navigation section */
+#navigation {
+    border: 2px solid lavender;
+    cursor: pointer;
+}
+
+#navigation:hover {
+    background: ghostwhite;
+}
+
+#navigation .wrapper .nav {
+  
+    background: var(--white);
+    padding: var(--size-lg);
+    border-radius: 2%;
+}
+
+.navigation__nav-body {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto;
+    column-gap: var(--size-lg);
+}
+
+
+.nav-element {
+    position: relative;
+}
+
+
+.notification-badge {
+    /* position elements */
+    position: absolute;
+    top: -10px;
+    right: -8px;
+
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+
+    cursor: pointer;
+    font-weight: bold;
+    font-size:  0.75rem;
+    line-height: 1;
+    min-width: 18px;
+    padding: var(--size-xs);
+    text-align: center;
+
+  }
+
+   /* Hide the badge if there's no count */
+  .notification-badge[data-count="0"] {
+    display: none;
+  }
+
+  #notification-bell-icon {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+ 
+  .dropdown {
+
+   
+    width: 400px;
+   
+
+  }
+
+
+ 
+
+  
+.dropdown,
+.notification-dropdown {
+    position: absolute;
+    right: 10px;
+
+    background: white;
+    box-shadow: var(--box-shadow);
+    cursor: pointer;
+    padding: var(--size-lg);
+
+}
+
+.dropdown,
+.notification-dropdown,
+#preview-mode {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0s 0.3s;
+    z-index: 100000;
+}
+
+#preview-mode {
+    border: 2px solid rgb(94, 5, 5);
+    background: ghostwhite;
+    margin-bottom: var(--size-xs);
+}
+
+
+.dropdown.show,
+.notification-dropdown.show,
+#new-card.show,
+.pin.show,
+#fund.show,
+#preview-mode.show,
+#remove-cards.show,
+#transfer.show,
+#transfer-close-icon.show,
+#transfer-progress-container.show,
+#fund-my-card.show,
+#transfer-amount-card.show,
+#sidebar-cards.show {
+    border: 2px solid lavender;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease-in-out, visibility 0s 0s;
+  }
+  
+
+.notification-dropdown {
+    /* positioning */
+    
+    width: 800px;
+    height: 350px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: var(--size-sm);
+   
+  }
+
+  .profile-info {
+
+    /* grid elements */
+    display: grid;
+    grid-template-columns: 25% 75%;
+    grid-template-rows: auto;
+    column-gap: 16px;
+
+    background: ghostwhite;
+    border: 2px solid lavender;
+  }
+
+
+  .profile-icon {
+    width: 90px;
+    height: 90px;
+    transform: scale(0.8);
+    cursor: pointer;
+  }
+
+  .account-icon:hover,
+  .profile-icon:hover {
+    transform: scale(0.6);
+  }
+
+  .account-info .value {
+    font-weight: bolder;
+    color: green;
+  }
+
+  .account-settings div {
+    background: white;
+    border: 2px solid lavender;
+    display: flex;
+   
+    /* sizes */
+    margin-top: var(--size-sm);
+    padding-top: var(--size-sm);
+    padding-bottom: var(--size-sm);
+
+  }
+
+  .account-settings div:hover {
+    background-color: ghostwhite;
+    color: green;
+    font-weight: bold;
+  }
+  
+  .account-settings div img {
+    /* paddings */
+    padding-right: var(--size-md);
+    padding-left: var(--size-sm);
+
+    height: 30px;
+    transform: translateY(10px);
+  
+  }
+
+ .slogan {
+    color: var(--darker-red);
+ }
+
+ 
+
+ /* Notification */
+
+ .notification-msg {
+    display: grid;
+    grid-template-columns: 10% 60% 15% 15%;
+    grid-template-rows: auto;
+    column-gap: var(--size-md);
+    margin-bottom: var(--size-sm);
+    
+   
+  
+    
+ }
+
+ .notification-msg a small {
+    font-family: "Poppins", sans-serif;
+    font-weight: 200;
+    
+ }
+
+ .notification-msg .notification-alert {
+    text-decoration: none;
+ }
+
+ .notification-msg .notification-alert small {
+    font-size: 0.875rem; /* 14px = 0.875rem (assuming that 1rem = 16px) */
+    color: #555;
+    font-weight: normal;
+ }
+
+
+ .no-notification {
+    height: 350px;
+    background: ghostwhite;
+    display: flex;
+    flex-direction: column;
+    text-transform: capitalize;
+    display: none;
+    overflow: hidden;
+ }
+
+ .no-notification p {
+    opacity: 0.5;
+ }
+
+ .no-notification img {
+    height: 60px;
+    width: 60px;
+    opacity: 0.4;
+ }
+
+ .notification-id  {
+    color: var(--deep-navy-blue);
+ }
+
+ /* The spinner */
+.spinner {
+    /* display: none; */
+    width: 50px;
+    height: 50px;
+    border: 8px solid #f3f3f3;      /* Light grey */
+    border-top: 8px solid #3498db;  /* Blue */
+    border-radius: 50%;
+    animation: spin 1.5s linear infinite;
+
+    /* position */
+    position: fixed;
+    top: 20%;
+    left: 60%;
+    right: 50%;
+    bottom: 50%;
+}
+
+
+.spinner3 {
+    display: none;
+    width: 30px;
+    height: 30px;
+    border: 8px solid #f3f3f3;      /* Light grey */
+    border-top: 8px solid #3498db;  /* Blue */
+    border-radius: 50%;
+    animation: spin 1.5s linear infinite;
+    position: absolute;
+    left: 37%;
+    top: 0;
+
+}
+
+
+/* notification buttons */ 
+.mark-all-as-read-btn {
+    background-color: #2D6A4F; /* Dark Green */
+  
+}
+
+.mark-all-as-unread-btn {
+    background-color: #6C9DC6; /* Soft Blue */
+   
+}
+
+.delete-all-notifications-btn {
+    background-color: #B74D57; /* Dark Red */
+    
+}
+
+
+.small-btn {
+    cursor: pointer;
+    color: white;
+    margin-right: var(--size-xs);
+    border: none;
+    padding: var(--size-sm);
+    
+}
+
+
+/* Section add account information */
+#dashboard-header {
+    background: var(--white);
+    margin-top: var(--size-sm);
+    border: 2px solid lavender;
+    cursor: pointer;
+}
+
+#dashboard-header .wrapper {
+    padding-left: var(--size-lg);
+    padding-right: var(--size-lg);
+}
+
+
+
+.dashboard-info {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: auto;
+    
+}
+
+.dashboard-info p {
+    text-align: center;
+    border: 2px solid lavender;
+    color: white;
+    font-weight: 600;
+    background: var(--background-primary);
+    padding: var(--size-sm);
+    
+}
+
+
+#add-account-info .wrapper {
+    display: grid;
+    grid-template-columns: 25% 75%;
+    column-gap: var(--size-xs);
+    cursor: pointer;
+}
+
+
+#dashboard-header .wrapper,
+#add-account-info  {
+    font-family: var(--font-family-secondary);
+}
+
+#add-account-info h3 {
+    font-weight: 200;
+    border-bottom: 1px solid rgb(171, 169, 169);
+    margin-top: var(--size-md);
+    opacity: 0.9;
+    margin-bottom: var(--size-md);
+}
+
+#add-account-info h3:first-child {
+ margin-top: none;   
+}
+
+
+#add-account-info {
+    margin-top: var(--size-sm);
+}
+
+
+.account-information {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--size-md);
+}
+
+.account-information p {
+    margin: 0;
+}
+
+
+
+/* The profile/form part */
+.profile-img {
+    height: 150px;
+    width: 150px;
+}
+
+.profile {
+    border: 2px solid lavender;
+    background: var(--white);
+    padding: var(--size-md);
+    cursor: pointer;
+}
+
+.profile div p {
+    font-family: var(--font-family-secondary);
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.profile-form {
+    background: var(--white);
+    padding: var(--size-md);
+    font-family: var(--font-family-secondary);
+    border: 2px solid lavender;
+}
+
+
+.profile-form-img {
+    height: 80px;
+    width: 80px;
+}
+
+.avatar {
+    display: flex;
+    column-gap: var(--size-md);
+    margin-top: var(--size-md);
+}
+
+
+
+
+
+label {
+    font-size: 0.875rem; /* 14px */
+    font-weight: 500;
+    color: #909090; 
+    margin-top: var(--size-xs);
+}
+
+
+.profile-information {
+    color: #0d3b66; 
+    font-weight: 300; 
+    font-size: 0.95rem; 
+    line-height: 1.5; 
+    opacity: 0.7; 
+}
+
+#dashboard-title {
+    opacity: 0.8;
+    text-transform: capitalize;
+
+}
+
+
+/* The  profile field */
+#first-name,
+#surname,
+#country {
+    text-transform: capitalize;
+
+}
+
+#country,
+#state,
+#postcode {
+    text-align: center;
+}
+
+
+#email {
+    text-transform: lowercase;
+}
+
+
+
+.spinner2 {
+    display: none;
+    width: 50px;
+    height: 50px;
+    border: 8px solid #f3f3f3;      /* Light grey */
+    border-top: 8px solid #3498db;  /* Blue */
+    border-radius: 50%;
+    animation: spin 1.5s linear infinite;
+
+    /* position */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    right: 50%;
+    bottom: 50%;
+
+}
+
+
+/* my wallet */
+#wallet {
+    background: white;
+
+}
+#wallet .wrapper {
+    display: grid;
+    grid-template-columns: 70% 30%;
+    grid-template-rows: auto;
+    padding: var(--size-md);
+  
+}
+
+.wallet-card {
+    background: var(--background-primary);
+    padding: var(--size-md);
+    margin-top: var(--size-md);
+    color: white;
+    box-shadow: var(--box-shadow);
+    border-radius: var(--size-sm);
+}
+
+.wallet-card p {
+    margin: 0;
+}
+
+#bank-account-amount,
+#bank-amount {
+    font-size: var(--size-xl);
+    font-weight: 900;
+}
+
+.amount {
+    font-size: var(--size-lg);
+    font-weight: 700;
+}
+
+#transactions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto;
+    column-gap: var(--size-md);
+}
+
+
+
+.btn-small {
+    padding: var(--size-sm);
+    cursor: pointer;
+}
+
+
+.btn-medium {
+    padding: var(--size-md);
+    cursor: pointer;
+}
+
+#clear-transaction-btn {
+    background: var(--background-primary);
+    color: white;
+    font-weight: bold;
+}
+
+.bank-card {
+    position: relative;
+    margin: var(--size-md);
+    border: 2px solid #A9A9A9;
+    padding: var(--size-md);
+    font-family: "Montserrat", sans-serif;
+    
+    font-weight: 300;
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
+    color: white;
+    font-weight: bolder;
+    cursor: pointer;
+   
+    
+}
+
+.bank-card:hover {
+    transform: scale(1.04);
+    opacity: 0.8;
+}
+
+
+
+.account-btn {
+    width: 100%;
+    cursor: pointer;
+    background: white;
+    border: 2px solid lavender;
+    margin-right: var(--size-xs);
+    font-weight: bold;
+    color: white;
+    background: var(--background-primary);
+    font-size: var(--size-md);
+}
+
+.account-btn:last-child {
+    margin-right: none;
+}
+
+
+.account-btn:hover {
+    transform: scale(1.02);
+}
+
+.card-icon {
+    width: 60px;
+    height: 60px;
+}
+
+.card-account-number {
+    display: flex;
+    justify-content: flex-end;
+    letter-spacing: var(--size-xs);
+    color: #B0B0B0; /* Subtle silver text */
+}
+
+.visa {
+    background: var(--background-quinary);
+}
+
+.mastercard {
+    background: var(--background-tertiary);
+}
+
+.discover {
+    background: var(--background-senary);
+}
+
+.card-name {
+    text-transform: capitalize;
+}
+
+
+table {
+    border-collapse: collapse;
+}
+
+tr {
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    font-family: var(--font-roboto);
+    line-height: 1.1;
+    border-collapse: collapse;
+    cursor: pointer;
+    font-weight: 300;
+}
+
+th {
+    font-size: 0.9rem; 
+    font-weight: bold;
+    text-align: left;
+    padding: 0.8rem;
+    text-align: center;
+    background: ghostwhite;
+}
+
+td {
+    font-size: 0.85rem;
+    padding: 0.6rem;
+}
+
+tr {
+    border-top: 1px solid lavender;
+    border-bottom: 1px solid lavender;
+}
+
+tr:hover {
+    background: ghostwhite;
+}
+
+.highlight-number {
+    box-shadow: var(--box-shadow);
+}
+
+.highlight-text {
+    background: ghostwhite;
+    border: 1px solid lavender;
+    padding: var(--size-sm);
+   
+}
+
+.card-type {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 0.8rem;
+}
+
+.date {
+    font-size: 0.8rem;
+}
+
+/* Keyframes for spin animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.pin {
+    padding: var(--size-xlg);
+    position: fixed;
+    top: 10%;
+    left: 35%;
+    border: 6px soiid ghostwhite;
+    background: white;
+    box-shadow: var(--box-shadow);
+    width: 35%;
+    font-family: var(--font-roboto);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0s 0.3s;
+    z-index: 1000000;
+    
+}
+
+
+
+.pin form {
+    display: grid;
+    width: 100%;
+}
+
+.pin form img {
+    height: 70px;
+    width: 70px;
+    text-align: center;
+    opacity: 0.7;
+}
+
+.pin form label {
+    color: black;
+    font-size: var(--size-md);
+}
+
+.pin form input {
+    font-size: var(--size-md);
+}
+
+
+.pin form .buttons {
+    display: flex;
+    padding-top: var(--size-sm);
+}
+
+
+.pin form .buttons button {
+    width: 100%;
+    padding: var(--size-xs);
+    font-size: 0.9rem;
+   
+
+    
+}
+
+#cancel-pin {
+    background: #b2bec3; 
+    color: white;
+}
+#enter-pin {
+    background: #27ae60; 
+    color: white;
+    
+}
+
+.pin-image-icon{
+    height: 80px;
+    width: 80px;
+}
+
+
+#dim {
+    position: fixed;  
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);  
+    z-index: 1000; 
+    display: none;
+}
+
+#fund-my-card-error,
+.form-error-msg {
+    display: none;
+}
+
+
+
+.spinner3.show,
+#fund-my-card-error.show,
+.form-error-msg.show {
+    display: block;
+}
+
+
+.d-none {
+    display: none;
+}
+
+#new-card,
+#remove-cards {
+    position: fixed;
+    top: 15%;
+    left: 29%;
+    background: white;
+    padding: var(--size-lg);
+    box-shadow: var(--box-shadow);
+    border: 3px solid lavender;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0s 0.3s;
+}
+
+#remove-cards {
+    top: 5%;
+}
+
+
+/* To be removed after it is built */
+#new-card label {
+    text-transform: capitalize;
+}
+
+#new-card h2 {
+    font-family: var(--font-roboto);
+}
+.card-details {
+    display: flex;
+    flex-direction: column;
+}
+
+#card-details {
+    width: 100%;
+}
+
+#create-card-btn {
+  position: relative;
+  width: 100%;  
+  margin-top: var(--size-md);
+  background: var(--background-primary);
+  color: var(--white);
+  text-transform: capitalize;
+  font-size: 1rem;
+  cursor: pointer;
+  min-width: 30px;
+
+}
+
+.cards-options-img img {
+   padding-right: var(--size-md);
+}
+
+#card-form input {
+    text-align: center;
+    font-size: 1rem;
+}
+
+input::placeholder {
+    opacity: 0.5;
+}
+
+#cardholder-name {
+    text-transform: capitalize;
+}
+
+.card-expiry, 
+.card-name {
+    font-size: 0.9rem;
+}
+
+#new-card-error-msg {
+    display: none;
+}
+
+#new-card-error-msg.show {
+    display: block;
+}
+
+#wallet-cards,
+#selectable-cards  {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto;
+   
+    column-gap: var(--size-xs);
+
+}
+#wallet-cards {
+    transform: scale(0.7);
+}
+
+
+
+#wallet-cards .card,
+#selectable-cards .card {
+  border: 2px solid lavender;
+  cursor: pointer;
+  position: relative;
+  margin: 0;
+  cursor: pointer;
+}
+
+
+#selectable-cards .card .card-account-number,
+#selectable-cards .card .card-expiry,
+#selectable-cards .card .date,
+#selectable-cards .card .card-amount,
+#selectable-cards .card .card-type {
+    font-size: 0.6875rem;
+}
+
+#selectable-cards .card .card-icon {
+    height: 25px;
+    width: 25px;
+}
+
+.highlight-credit-card {
+    opacity: 0.5;
+    transform: scale(0.8);
+    background: rgb(160, 22, 22);
+  }
+
+
+
+.removable-card-icon {
+  
+    width: 100%;
+    height: 165px;
+
+}
+
+
+#selectable-cards .card:hover {
+    transform: scale(1.04);
+    opacity: 0.8;
+}
+
+
+#removable-card-area {
+    display: grid;
+    grid-template-rows: var(--size-xlg);
+    width: 100%;
+    border: 2px solid lavender;
+    padding: var(--size-md);
+    margin-top: var(--size-md);
+    font-size: 0.85rem;
+    font-family: var(--font-poppins);  
+    font-weight: 300;
+    overflow-y: scroll;
+}
+
+
+#removalCardButton {
+    color: black;
+}
+
+.grid_20_50_30 {
+    display: grid;
+    grid-template-columns: 20% 50% 30%;
+    grid-template-rows: auto;
+}
+
+
+/* fund account */
+#fund-my-card,
+#fund {
+    width: 30%;
+    position: fixed;
+    top: 5%;
+    left: 36%;
+    background: white;
+    box-shadow: var(--box-shadow);
+    padding: var(--size-lg);
+
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0s 0.3s;
+    z-index: 1000;
+    
+}
+
+.add-fund-icon,
+#add-fund-icon {
+    height: 200px;
+    width: 200px;
+}
+
+#fund-account-btn {
+    width: 100%;
+    background: var(--background-primary);
+    color: var(--white);
+    font-size: var(--size-md);
+}
+
+#fund-account-select-field {
+    width: 100%;
+}
+
+#fund-form select,
+#fund-form input {
+    font-size: 0.98;
+    font-family: var(--font-poppins);
+    color: var(--deep-navy-blue);
+}
+
+
+
+/* transfer funds */
+#transfer {
+    position: fixed;
+    top: 0;
+    left: 25%;
+    background: var(--white);
+    width: 60%;
+    box-shadow: var(--box-shadow);
+    padding-top: var(--size-xs);
+    padding-left: var(--size-md);
+    padding-right: var(--size-md);
+    padding-bottom: var(--size-lg);
+    cursor: pointer;
+    border: 3px solid lavender;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0s 0.3s;
+    z-index: 100;
+    
+}
+
+.button-close-icon {
+    background: none;
+    border: none;
+}
+
+#wallet-cards {
+    display: none;
+}
+
+#wallet-cards.show {
+    display: grid;
+}
+
+
+.transfer-ui-details {
+    font-size: 1.6rem;
+}
+
+#transfer__msg span {
+    font-size: 0.95rem;
+}
+
+#transfer-fund-amount {
+    background: ghostwhite;
+    padding-top: var(--size-xs);
+    margin-bottom: var(--size-sm);
+    border: 2px solid lavender;
+}
+
+#preview-mode span {
+    font-size: 0.9rem;
+}
+
+#transfer-error-card-msg-id,
+#transfer-messages-id {
+    display: none;
+}
+
+
+#transfer-error-card-msg-id.show,
+#transfer-messages-id.show{
+    display: block;
+}
+
+.transfer-error-msg span,
+.transfer-error-msg p {
+    font-size: 0.82rem;
+}
+
+
+
+#progressBar {
+    width: 100%;
+    border: 1px solid #ccc;
+   
+}
+
+#progress {
+    height: 25px;
+    width: 0%;
+    background: #4caf50;
+    transition: width 0.3s ease-in-out
+}
+
+
+/* The container */
+#transfer-progress-container {
+    width: 50%;
+    position: fixed;
+    top: 12%;
+    left: 30%;
+
+    background: white;
+    box-shadow: var(--box-shadow);
+    box-shadow: 3px solid lavender;
+    padding: var(--size-lg);
+
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0s 0.3s;
+    z-index: 100000000000000;
+}
+
+
+#transfer-close-btn,
+#wallet-transfer-btn {
+    background: var(--background-primary);    
+    color: white;
+}
+
+
+#transfer-waiting-msg,
+#transfer-close-btn {
+    display: none;
+}
+
+
+#transfer-waiting-msg.show,
+#transfer-close-btn.show {
+    display: block;
+}
+
+#sidebar-cards {
+    
+    position: fixed;
+    top: 40px;
+    background: white;
+    width: 45%;
+    padding-left: var(--size-xlg);
+    padding-right: var(--size-xlg);
+    padding-top: var(--size-md);
+    padding-bottom: var(--size-md);
+    left: 30%;
+    box-shadow: var(--box-shadow);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0s 0.3s;
+    z-index: 1000;
+}
+
+
+
+#sidebar-card {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: auto;
+    margin-top: var(--size-sm);
+    margin-bottom: var(--size-sm);
+    
+}
+
+#sidebar-card .card {
+    margin: 0;
+}
+
+#card-info span {
+
+    font-size: 0.95rem;
+    line-height: 1.8;
+}
+
+#sidebar-buttons {
+    padding-top: var(--size-md);
+    padding-bottom: var(--size-md);
+  
+
+}
+
+#sidebar-buttons button {
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    padding: var(--size-sm);
+   
+}
+
+
+/* Individual button colors */
+.block-btn {
+    background-color: #f97316; /* Amber */
+}
+.block-btn:hover {
+    background-color: #ea580c;
+}
+
+.transfer-btn {
+    background-color: #3b82f6; /* Blue */
+}
+.transfer-btn:hover {
+    background-color: #2563eb;
+}
+
+.add-btn {
+    background-color: #10b981; /* Emerald */
+}
+.add-btn:hover {
+    background-color: #059669;
+}
+
+.delete-btn {
+    background-color: #ef4444; /* Red */
+}
+.delete-btn:hover {
+    background-color: #dc2626;
+}
+
+.close-btn {
+    background-color: #6b7280; /* Gray */
+}
+.close-btn:hover {
+    background-color: #4b5563;
+}
+
+.card-not-blocked {
+    border:5px solid green;
+    
+}
+
+.card-is-blocked {
+    background: red;
+    opacity: 0.6;
+}
+
+#transfer-amount-card {
+    position: fixed;
+    top: 0;
+    background: white;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0s 0.3s;
+    z-index: 1001;
+}
+
+#transfer-amount-card {
+    width: 70%;
+    padding: var(--size-md);
+    box-shadow: var(--box-shadow);
+    border: 4px solid lavender;
+}
+
+
+#transferring-card,
+#transferring-to {
+    transform: scale(0.75);
+}
+
+#transference h1 {
+    transform: scale(0.7);
+}
+
+#transferring-card h1,
+#transferring-to h1 {
+    transform: scale(0.9);
+    border: 1px solid blue;
+}
+
+
+.account-summary {
+    background: ghostwhite;
+    padding-top: var(--size-sm);
+}
+
+#account-transfer,
+#no-entry {
+    border: 2px solid lavender;
+    margin-top: 2px;
+    height: 200px;
+    margin-top: var(--size-md);
+}
+
+#cards-to-transfer-to-container .bank-card {
+    margin: auto;
+}
+
+#transfer-from-card-btn {
+    width: 50%;
+    padding: var(--size-sm);
+    font-size: 0.8rem;
+    font-weight: 500;
+    background: var(--background-primary);
+    color: white;
+}
+
+
+
+#transfer-amount-card-img {
+    height: 180px;
+    width: 180px;
+    opacity: 0.7;
+    /* margin-top: var(--size-xlg); */
+}
+
+#select-card-div.show {
+    display: grid;
+}
+#select-card-div {
+    display: none;
+}
+
+
+.card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 0, 0, 0.5);
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 10;
+}
+
+#refresh-overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+    position: fixed;
+    top: 0;
+    left: 0;
+  
+    width: 100%;
+    height: 100%;
+  
+    background-color: white; 
+    z-index: 9999; 
+    opacity: 0;
+   
+    
+    pointer-events: none;
+    
+  }
+  
+  #refresh-overlay img {
+    max-width: 50%;
+    max-height: 50%;
+    object-fit: contain; 
+  }
+
+  #refresh-overlay.show {
+    opacity: 0.8;
+    visibility: visible;
+    transition: opacity 0.3s ease-in-out, visibility 0s 0s;
+  }
+
+
+  .block-btn {
+    cursor: no-drop;
+    opacity: 0.4;
+  }

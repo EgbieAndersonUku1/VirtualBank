@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'jazzmin',
     
     'authentication.apps.AuthenticationConfig',
+    'home.apps.HomeConfig',
     
     # third party apps
     'django.contrib.admin',

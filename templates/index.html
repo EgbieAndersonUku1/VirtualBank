@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block body %}
+
+        {% include "partials/side_dashboard/side_dashboard.html" %}
+
+        <!-- The main body -->
+        <div id="main-body">
+
+            <!-- The navigation section -->
+            {% include "partials/main/navigation.html" %}
+
+
+            <!-- account information -->
+            {% include "partials/main/account_information.html" %}
+
+
+            <!-- Add account information -->
+            {% include "partials/main/add_account_info.html" %}
+
+            <!-- Add account information -->
+            {% include "partials/main/dashboard_header.html" %}
+
+
+            <!-- my wallet  -->
+            {% include "partials/main/wallet.html" %}
+
+
+            <!-- The pin section -->
+            {% include "partials/main/pin.html" %}
+
+            <!-- add new card -->
+            {% include "partials/main/add_new_card.html" %}
+
+            <!-- Remove card div-->
+            {% include "partials/main/remove_card.html" %}
+
+            <!-- fund wallet -->
+            {% include "partials/main/fund.html" %}
+
+            <!-- transfer funds -->
+            {% include "partials/main/transfer_funds.html" %}
+
+            {% include "partials/progress/progress_bar.html" %}
+
+            <!-- side bar cards-->
+            {% include "partials/main/sidebar_cards.html" %}
+
+            <!-- fund my card -->
+            {% include "partials/main/fund_my_card.html" %}
+
+            <!-- This section allows the transferring from a card to eiter another card, bank or wallet-->
+            {% include "partials/main/transfer_amount_card.html" %}
+
+
+{% endblock body %}
