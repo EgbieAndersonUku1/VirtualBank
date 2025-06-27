@@ -145,21 +145,6 @@ export function handleDeleteLinkClick(e) {
 
 
 
-
-// /**
-//  * Hides the dropdown menu when the user scrolls the page.
-//  */
-export function handleHideDropdownOnScroll() {
-   // Write the logic for this correct logic removes the toggle bar after
-   // user scrolls. This means that the notification bar no longer shows
-   // up when the user clicks on it.
-   
-}
-
-
-
-
-
 function validatePageElements() {
     checkIfHTMLElement(profileDropdownElement, "Dashboard element section");
     checkIfHTMLElement(spinnerElement, "spinner element section");
