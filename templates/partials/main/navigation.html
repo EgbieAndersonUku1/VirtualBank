@@ -6,7 +6,7 @@
             
             <!-- Logo Section -->
             <div class="nav-head">
-                <p class="logo" aria-label="EUSBC logo">EUSBC</p>
+                <p class="logo" aria-label="EUSBC logo"></p>
             </div>
 
             <!-- Navigation Body -->
@@ -82,7 +82,7 @@
                             <div class="account-info">
                                 <p><span class="bold">Account no:</span> <span class="value">400217
                                         00327502</span></p>
-                                <p><span class="bold">Pin:</span> <span class="value">1025</span>
+                                <p><span class="bold">Pin:</span> <span class="value">{{ PIN }}</span>
                                 </p>
                             </div>
                         </div>
@@ -95,16 +95,15 @@
                                 <p>Dashboard</p>
                             </div>
 
-                            <div class="logout">
+                            <div class="settings">
                                 <img src="{% static '/images/icons/settings_icon.png' %}" alt="Settings icon" loading="lazy"
                                     class="account-icon">
                                 <p>Settings</p>
                             </div>
 
                             <div class="logout">
-                                <img src="{% static '/images/icons/logout.png' %}" alt="Logout icon" loading="lazy"
-                                    class="account-icon">
-                                <p>Logout</p>
+                                <img src="{% static '/images/icons/logout.png' %}" alt="Logout icon" loading="lazy" class="account-icon">
+                                <a href="{% url 'logout' %}">Logout</a>
                             </div>
                         </div>
                     </div>

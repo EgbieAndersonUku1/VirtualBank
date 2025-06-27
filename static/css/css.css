@@ -76,6 +76,10 @@ body {
     display: grid;
 }
 
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
 
 input {
     height: 34px;
@@ -98,9 +102,13 @@ input {
 
 .authentication-logo {
     height: 200px;
-    width: 250px;
+    width: 200px;
 }
 
+#verification-logo {
+    height: 420px;
+    width: 450px;
+}
 
 #site-title {
     font-size: var(--font-size-md);
@@ -142,6 +150,31 @@ label {
     column-gap: 8px;
 }
 
+.flex-verification-four-column-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto;
+    column-gap: 8px;
+}
+
+.verification-section {
+
+} 
+
+.four-column-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto;
+    column-gap: 8px;
+}
+
+#pin-input input {
+    height: 100px;
+    width: 100px;
+    font-size: var(--font-size-xxxl);
+    text-align: center;
+}
+
 .flex-verification-grid input  {
     height: 100px;
     border: 2px solid lavender;
@@ -167,8 +200,8 @@ label {
     color: white;
     padding: 3px;
     font-size: var(--font-size-md);
-    margin: 7px;
-    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;
+    margin: 4px;
+    /* box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px; */
 }
 
 
@@ -274,13 +307,13 @@ select {
     text-transform: capitalize;
 }
 
-.center {
+/* .center {
     display: flex;
     text-align: center;
     align-items: center;
     justify-content: center;
     
-}
+} */
 
 .left-aligin {
     text-align: left;
@@ -764,7 +797,7 @@ button:hover {
     padding-left: var(--size-sm);
 
     height: 30px;
-    transform: translateY(10px);
+    transform: translateY(0px);
   
   }
 
@@ -1945,3 +1978,11 @@ input::placeholder {
     cursor: no-drop;
     opacity: 0.4;
   }
+
+
+
+#pin-image {
+    height: 400px;
+    width: 400px;
+}
+

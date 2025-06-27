@@ -3,19 +3,34 @@ from django.conf import settings
 from django_email_sender.email_logger import EmailSenderLogger
 from django_email_sender.email_sender import EmailSender
 from django_email_sender.email_sender_constants import LoggerType
+from django.shortcuts import redirect
+from django.forms import Form
 
-from .forms import VerifyEmailForm
+from django.http import HttpRequest
+
+from .forms import VerifyEmailForm, AddPinForm
 from .models import Verification, EmailLogger, User
 
 logger = logging.getLogger("email_sender")
             
             
-def extract_code_from_verification_form(form: VerifyEmailForm) -> bool:
-    if not isinstance(form, VerifyEmailForm):
-        raise ValueError(f"""The form is not an instance of VerifyEmailForm. 
-                         Expected a form with instance VerfiyEmailForm but got {type(VerifyEmailForm)}""")
-    
-    return "".join([field.value() for field in form if field.value()])
+def extract_code_from_verification_form(form: VerifyEmailForm) -> str:
+    return _extract_code_from_form(form, VerifyEmailForm)
+  
+
+def extract_pin_from_form(form: AddPinForm) -> str:
+    return _extract_code_from_form(form, AddPinForm)
+
+
+def _extract_code_from_form(form: Form, form_class: type[Form]) -> str:
+    if not isinstance(form, form_class):
+        raise ValueError(
+            f"The form is not an instance of {form_class.__name__}. "
+            f"Expected an instance of {form_class.__name__} but got {type(form).__name__}."
+        )
+    return "".join(field.value() for field in form if field.value())
+
+
 
 
 
@@ -81,3 +96,13 @@ def _send_email_helper(subject : str,
         .send()
     )
     return email
+
+
+def redirect_to_pin_page_if_not_set_else_home(request):
+
+    if not isinstance(request, HttpRequest):
+        raise ValueError(f"The request is not an instance of HttpRequest. Expected an instance of request but got type {type(request)}")
+
+    if not request.user.pin:
+        return redirect("add_pin")
+    return redirect("home")

@@ -16,7 +16,6 @@ import { handleProfileIconClick,
         handleMarkAllAsUnReadClick,
         handleDeleteLinkClick,
         handleDeleteAllNotificationsBtnClick,
-        handleHideDropdownOnScroll,
 
        } from "./notifications.js";
 

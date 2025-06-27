@@ -6,10 +6,10 @@ import { logError } from "./logger.js";
 import { showNewCardForm} from "./add-new-card.js";
 import { cards } from "./cardsComponent.js";
 import { handleFundDiv } from "./fund-account.js";
-import { getSelectedSidebarCardState } from "./sidebarCard.js";
 import { config } from "./config.js";
 import { AlertUtils } from "./alerts.js";
 import { openWindowsState } from "./config.js";
+import { parseFormData } from "./formUtils.js";
 
 
 const ADD_FUNDS_ID     = "add-funds";
@@ -23,6 +23,7 @@ const pinFormElement                 = document.getElementById("pin-form");
 const pinFormIconElement             = document.getElementById("pin-form-icon");
 const pinErrorMsg                    = document.getElementById("pin-error-msg");
 const pinInputElement                = document.getElementById("pinInputField");
+const addNewPinFormElement           = document.getElementById("addNewPinForm")
 const cardFormElement                = document.getElementById("card-form");
 const removableSelectableCardsDiv    = document.getElementById("selectable-cards");
 const removeCardsDivElement          = document.getElementById("remove-cards");
@@ -259,12 +260,11 @@ function closeDivs(divsToClose) {
     })
 }
 
-
-
 function validatePageElements() {
     checkIfHTMLElement(pinElement, "Pin element");
     checkIfHTMLElement(dimBackgroundElement, "Dim background element");
     checkIfHTMLElement(pinFormElement, "Pin form element");
+    checkIfHTMLElement(addNewPinFormElement, "The add new pin form couldn't be found");
     checkIfHTMLElement(pinFormIconElement, "pin icon element");
     checkIfHTMLElement(pinErrorMsg, "The pin error message element");
     checkIfHTMLElement(pinInputElement, "The pin input element");

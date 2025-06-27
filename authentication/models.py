@@ -41,6 +41,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     surname           = models.CharField(max_length=10)
     username          = models.CharField(unique=True, db_index=True)
     email             = models.EmailField(unique=True, db_index=True, max_length=40)
+    pin               = models.CharField(max_length=4, db_index=True, blank=True, null=True)
     is_active         = models.BooleanField(default=True)    
     is_staff          = models.BooleanField(default=False)
     is_admin          = models.BooleanField(default=False)
@@ -66,6 +67,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def full_name(self):
         return f"{self.first_name.capitalize()} {self.surname.capitalize()}"
     
+    def is_pin_valid(self, pin):
+        return self.pin == pin
+    
     @classmethod
     def get_by_email(cls, email):
         return cls._get_by_field_name(field_name="email", field_value=email)
@@ -74,6 +78,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_by_username(cls, username):
         return cls._get_by_field_name(field_name="username", field_value=username)
     
+  
     @classmethod
     def _get_by_field_name(cls, field_name: str, field_value: str):
         
@@ -83,6 +88,8 @@ class User(AbstractBaseUser, PermissionsMixin):
                     return cls.objects.get(email=field_value)
                 case "username":
                     return cls.objects.get(username=field_value)
+             
+              
         except cls.DoesNotExist:
             return None
         

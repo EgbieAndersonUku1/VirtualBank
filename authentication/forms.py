@@ -34,13 +34,19 @@ class RegisterForm(ModelForm):
             self.add_error("confirm_password", "The password and confirm password don't match.")
 
         return cleaned_data
-
+    
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data["password"])
+        if commit:
+            user.save()
+        return user
 
 class LoginForm(forms.Form):
     
-    username = forms.CharField(
+    email = forms.EmailField(
         max_length=40,
-        label="Username"
+        label="email"
     )
     
     password = forms.CharField(
@@ -157,3 +163,43 @@ class VerifyEmailForm(forms.Form):
     
 
 
+
+class AddPinForm(forms.Form):
+    first_char = forms.CharField(
+        max_length=1,
+        min_length=1,
+        widget=forms.TextInput(attrs={
+            'id': 'first-char',
+            'class': 'verification-char',
+            'maxlength': '1',
+            'required': True,
+        })
+    )
+    second_char = forms.CharField(
+        max_length=1,
+        min_length=1,
+        widget=forms.TextInput(attrs={
+            'id': 'second-char',
+            'class': 'verification-char',
+            'maxlength': '1',
+            'required': True,
+        })
+    )
+    third_char = forms.CharField(
+        max_length=1,
+        min_length=1,
+        widget=forms.TextInput(attrs={
+            'id': 'third-char',
+            'class': 'verification-char',
+            'maxlength': '1',
+        })
+    )
+    fourth_char = forms.CharField(
+        max_length=1,
+        min_length=1,
+        widget=forms.TextInput(attrs={
+            'id': 'fourth-char',
+            'class': 'verification-char',
+            'maxlength': '1',
+        })
+    )

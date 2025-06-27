@@ -19,7 +19,7 @@ class UserAdmin(admin.ModelAdmin):
         (
             "User information",
             {
-                "fields": ["username", "email",  "first_name", "surname"],
+                "fields": ["username", "email",  "first_name", "surname", "pin"],
             },
         ),
         (
