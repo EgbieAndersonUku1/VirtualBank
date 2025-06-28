@@ -9,7 +9,7 @@ import { handleFundDiv } from "./fund-account.js";
 import { config } from "./config.js";
 import { AlertUtils } from "./alerts.js";
 import { openWindowsState } from "./config.js";
-import { parseFormData } from "./formUtils.js";
+import fetchData from "./fetch.js";
 
 
 const ADD_FUNDS_ID     = "add-funds";
