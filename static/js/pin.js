@@ -9,7 +9,7 @@ import { handleFundDiv } from "./fund-account.js";
 import { config } from "./config.js";
 import { AlertUtils } from "./alerts.js";
 import { openWindowsState } from "./config.js";
-import { parseFormData } from "./formUtils.js";
+import fetchData from "./fetch.js";
 
 
 const ADD_FUNDS_ID     = "add-funds";
@@ -43,37 +43,40 @@ pinElement.addEventListener("submit", handlePinFormSubmission);
 let PIN_ENTERED = false;
 
 export function handlePinShowage(e, wallet) {
+
    const id = e.target.id;
 
+  
+   
    if (id !== ADD_FUNDS_ID && id !== ADD_NEW_CARD && id !== TRANSFER_FUNDS && id !== REMOVE_CARD) {
-        return;
+        return false;
    }
-
+    alert(id);
    if (!PIN_ENTERED) {
         showPinErrorMsg('', false);
         pinElement.classList.add("show");
         dimBackground(dimBackgroundElement, true);
-        return;
+        return true;
    }
 
    if (id === ADD_NEW_CARD) {
         if (openWindowsState.isCardManagerWindowOpen) {
             AlertUtils.warnWindowConflict()
-            return;
+            return true;
         }
 
         dimBackground(dimBackgroundElement, true);
         showNewCardForm(e);
         openWindowsState.isAddNewCardWindowOpen = true;
         closeDivs([removeCardsDivElement, addFundsDivElement, transferDivElement])
-        return;
+        return true;
      
    }
 
    if (id === ADD_FUNDS_ID) {
         if (openWindowsState.isCardManagerWindowOpen) {
             AlertUtils.warnWindowConflict()
-            return;
+            return true;
         }
 
         // set the window to close
@@ -84,14 +87,14 @@ export function handlePinShowage(e, wallet) {
 
         handleFundDiv(e);
         closeDivs([addNewCardDivElement, removeCardsDivElement, transferDivElement])
-        return
+        return true;
    }
 
    if (id === REMOVE_CARD) {
     
      if (openWindowsState.isCardManagerWindowOpen) {
         AlertUtils.warnWindowConflict()
-        return;
+        return true;
      }
 
      removeCardsDivElement.classList.add("show");

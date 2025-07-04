@@ -1,0 +1,81 @@
+
+<form action="{% url 'save_profile_details' %}" method="post" id="profile-form">
+
+    {% csrf_token %}
+
+ 
+    <!-- Personal Information -->
+    <h3>Personal Information</h3>
+
+    <div class="two-column-grid">
+        <div class="form-group flex-direction-column">
+            <label for="{{ profile_form.first_name.id}}"> {{ profile_form.first_name.label }}</label>
+        
+            {{ profile_form.first_name }}
+        </div>
+
+        <div class="form-group flex-direction-column">
+            <label for="{{ profile_form.surname.id}}">  {{ profile_form.surname.label }}</label>           
+            {{ profile_form.surname }}
+        </div>
+    </div>
+
+    <div class="form-group">
+      
+        <div class="form-group flex-direction-column">
+            <label for="{{ profile_form.mobile.id}}">{{ profile_form.mobile.label }}</label>    
+            {{ profile_form.mobile }}
+        </div>
+    </div>
+
+    <div class="two-column-grid">
+        <div class="form-group flex-direction-column">
+             <label for="{{ profile_form.gender.id}}">{{ profile_form.gender.label }}</label>    
+            {{ profile_form.gender }}
+        </div>
+
+        <div class="form-group flex-direction-column">
+            <label for="{{ profile_form.maritus_status.id}}">{{ profile_form.maritus_status.label }}</label>    
+
+            {{ profile_form.maritus_status }}
+        </div>
+    </div>
+
+    <!-- Location Section -->
+    <h3>Location</h3>
+    <div class="triple-column-grid">
+        <div class="form-group flex-direction-column">
+            <label for="{{ profile_form.country.id}}">{{ profile_form.country.label }}</label>    
+            {{ profile_form.country }}
+        </div>
+
+        <div class="form-group flex-direction-column">
+            <label for="{{ profile_form.state.id}}">{{ profile_form.state.label }}</label>    
+            {{ profile_form.state }}
+        </div>
+
+        <div class="form-group flex-direction-column">
+             <label for="{{ profile_form.postcode.id}}">{{ profile_form.postcode.label }}</label>   
+            {{ profile_form.postcode }}
+        </div>
+    </div>
+
+    <!-- Identification Documents -->
+    <h3>Identification Documents</h3>
+    <div class="two-column-grid">
+        <div class="form-group flex-direction-column">
+             <label for="{{ profile_form.identification_documents.id}}">{{ profile_form.identification_documents.label }}</label> 
+            {{ profile_form.identification_documents }}
+        </div>
+
+        <div class="form-group flex-direction-column">
+            <label for="{{ profile_form.signature.id}}">{{ profile_form.signature.label }}</label> 
+            {{ profile_form.signature }}
+        </div>
+    </div>
+
+    <div class="flex-end margin-top-md">
+        <button type="submit" class="button save-profile-btn" id="profile-form-button">Save Changes</button>
+    </div>
+
+</form>

@@ -37,10 +37,16 @@ notificationManager.setKey(config.NOTIFICATION_KEY);
 
 
 export async function handleCardFormSubmission(e, wallet) {
-
-    e.preventDefault();
+   
+   
     const CREATE_CARD_BTN_ID = "create-card-btn";
 
+    if (e.target.id !== CREATE_CARD_BTN_ID) {
+        return;
+    }
+      
+    e.preventDefault();
+        
     if (!cardFormElement.checkValidity()) {
       
         if (e.target.id === CREATE_CARD_BTN_ID) {

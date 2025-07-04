@@ -49,6 +49,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'jazzmin',
     
+    'account.apps.AccountConfig',
     'authentication.apps.AuthenticationConfig',
     'home.apps.HomeConfig',
     
