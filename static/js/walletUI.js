@@ -101,7 +101,11 @@ function updateCardStateObjectWithBlockCards() {
 }
 
 export function handleWalletPin(e) {
-    handlePinShowage(e, wallet);
+    const resp = handlePinShowage(e, wallet);
+
+    if (!resp) {
+        return false;
+    }
     handlePinFormClosure(e);
     handlePinFormSubmission(e, wallet)
     

@@ -32,17 +32,20 @@ export default async function fetchData({ url, csrfToken = null, body = null, me
         };
 
         const response = await fetch(url, options);
+        const data     = await response.json();
 
         if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            console.log(`HTTP error! Status: ${response.status}`);
+            throw new Error(`${data.ERROR || "Unknown Error"}`);
         }
 
-        return await response.json();
+        return data;
 
     } catch (error) {
 
         console.error("Fetch error:", error);
-        return null;
+        throw new Error(`${error}`);
+      
     }
 }
 

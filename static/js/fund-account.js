@@ -24,14 +24,17 @@ fundFormElement.addEventListener("sumbit", handleFundForm);
 
 
 export function handleFundForm(e) {
-    e.preventDefault(); 
     
-    if (e.target.id != "fund-account-btn") {
-      return;
+    const FUND_BTN_CLASS_NAME = "fund-account-btn";
+    
+    if (e.target.id !== FUND_BTN_CLASS_NAME) {
+      return false;
     }
 
+    e.preventDefault(); 
+    
     const formData       = new FormData(fundFormElement);
-    const requiredFields = ["fund_account_type", "amount"]
+    const requiredFields = [FUND_BTN_CLASS_NAME, "amount"]
 
     if (fundFormElement.checkValidity()) {
 
@@ -51,7 +54,8 @@ export function handleFundForm(e) {
         return false;
         
     } else {
-        fundFormElement.reportValidity()
+        fundFormElement.reportValidity();
+        return false;
     }
    
 }

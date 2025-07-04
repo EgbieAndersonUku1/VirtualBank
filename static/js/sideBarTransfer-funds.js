@@ -346,13 +346,13 @@ function setCardTransferBalance() {
     const cardNumber = getSelectedSidebarCardState().lastCardClickeCardNumber;
 
     if (!cardNumber) {
-        logError("setCardTransferBalance", `The card number was not found, there should be a card number since the card was clicked`);
+        warnError("setCardTransferBalance", `The card number was not found, there should be a card number since the card was clicked`);
         return;
     }
     const card = Card.getByCardNumber(cardNumber);
 
     if (!card) {
-        logError("setCardTransferBalance", "The card object");
+        warnError("setCardTransferBalance", "The card object");
         return;
     }
     updateCardFields("updateCardTransferAmount", cardBalanceElement, "Card balance element", card.balance)

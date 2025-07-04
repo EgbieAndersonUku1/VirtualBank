@@ -67,7 +67,8 @@ class Card(models.Model):
     card_type    = models.CharField(choices=CardType.choices, max_length=1)
     cvc          = models.CharField(max_length=3)
     account      = models.ForeignKey(BankAccount, on_delete=models.CASCADE, related_name="cards")
-
+    created_on   = models.DateTimeField(auto_now_add=True)
+    modified_on  = models.DateTimeField(auto_now=True)
 
 
 class Wallet(models.Model):
@@ -82,10 +83,10 @@ class Wallet(models.Model):
     modified_on           = models.DateTimeField(auto_now=True)
 
 
-
 class Profile(models.Model):
 
     class Gender(models.TextChoices):
+        
         SELECT_GENDER = "", "Select your gender"
         MALE          = "M", "Male"
         FEMALE        = "F", "Femaie"
@@ -93,6 +94,7 @@ class Profile(models.Model):
         PREFER_NOT_TO_SAY = "P", "Prefer not to say"
 
     class Maritus_Status(models.TextChoices):
+
         SELECT_YOUR_STATUS         = "", "Select your status"
         SINGLE                     = "S", "Single"
         MARRIED                    = "M", "Married"
@@ -106,19 +108,6 @@ class Profile(models.Model):
         ITS_COMPLICATED            = "IC", "It's complicated"
         PREFER_NOT_TO_SAY          = "P", "Prefer not to say"
 
-    first_name     = models.CharField(max_length=40)
-    surname        = models.CharField(max_length=40)
-    email          = models.EmailField(max_length=40, unique=True)
-    mobile         = models.CharField(max_length=11)
-    country        = models.CharField(max_length=50)
-    state          = models.CharField(max_length=50)
-    postcode       = models.CharField(max_length=10)
-    gender         = models.CharField(choices=Gender.choices, max_length=1)
-    maritus_status = models.CharField(choices=Maritus_Status.choices, max_length=4)
-    
-
-
-class IdentificationDocument(models.Model):
     class IdentificationType(models.TextChoices):
         PASSPORT        = "p", "Passport"
         DRIVING_LICENCE = "d", "Driving Licence"
@@ -127,6 +116,23 @@ class IdentificationDocument(models.Model):
     class Signature(models.TextChoices):
         UPLOAD_SIGNATURE = "u", "Upload signature"
         DRAW_SIGNATURE   = "d", "Draw signature"
-    
-    identification_type = models.CharField(choices=IdentificationType.choices, max_length=1)
-    signature           = models.CharField(choices=Signature.choices, max_length=1)
+
+    first_name               = models.CharField(max_length=40)
+    surname                  = models.CharField(max_length=40)
+    email                    = models.EmailField(max_length=40, blank=True)
+    mobile                   = models.CharField(max_length=20)
+    country                  = models.CharField(max_length=50)
+    state                    = models.CharField(max_length=50)
+    postcode                 = models.CharField(max_length=10)
+    gender                   = models.CharField(choices=Gender.choices, max_length=1)
+    maritus_status           = models.CharField(choices=Maritus_Status.choices, max_length=4)
+    user                     = models.OneToOneField(User, on_delete=models.CASCADE, unique=True)
+    identification_documents = models.CharField(choices=IdentificationType.choices, max_length=1)
+    signature                = models.CharField(choices=Signature.choices, max_length=1)
+    created_on              = models.DateTimeField(auto_now_add=True)
+    modified_on             = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if not self.email:
+            self.email = self.user.email.lower()
+        return super().save(*args, **kwargs)

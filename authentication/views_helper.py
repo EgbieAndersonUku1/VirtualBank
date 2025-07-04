@@ -11,6 +11,7 @@ from django.http import HttpRequest
 from .forms import VerifyEmailForm, AddPinForm
 from .models import Verification, EmailLogger, User
 
+
 logger = logging.getLogger("email_sender")
             
             
@@ -33,7 +34,6 @@ def _extract_code_from_form(form: Form, form_class: type[Form]) -> str:
 
 
 
-
 def send_verification_email(user: User, verification: Verification, url: str, subject: str = "Verify your email"):
     return _send_email_helper(subject=subject,
                               html_template="emails/register.html",
@@ -42,7 +42,6 @@ def send_verification_email(user: User, verification: Verification, url: str, su
                               verification=verification,
                               verification_link=url
                               )
-
 
 
 def resend_verification_email(user: User, 
