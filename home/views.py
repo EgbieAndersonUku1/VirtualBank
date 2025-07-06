@@ -12,6 +12,6 @@ def home(request):
     profile_form = ProfileForm()
 
     context = {
-        "profile_form": profile_form
+        "profile_form": profile_form,
     }
     return render(request, "index.html", context=context)

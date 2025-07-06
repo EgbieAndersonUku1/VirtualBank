@@ -283,7 +283,7 @@ export function compareTwoObjects(object1, object2) {
     const keys2 = Object.keys(object2);
 
     if (keys1.length !== keys2.length) {
-        return { areEqual: false, changes: null };
+        return { areEqual: false, changes: null, keysObject1: keys1.length, keysObject2: keys2.length };
     }
 
     const changes = {};
@@ -293,7 +293,7 @@ export function compareTwoObjects(object1, object2) {
         const value2 = object2[key]?.trim?.() || object2[key];
 
         if (value1 !== value2) {
-            changes[key] = { previous: value1, current: value2 };
+            changes[key] = { changed: value1, current: value2 };
         }
     }
 

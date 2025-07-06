@@ -22,21 +22,10 @@ export function getLocalStorage(key) {
 
 
 
-export function removeFromLocalStorage(key, id) {
-    const items = getLocalStorage(key);
-
-    if (items && Array.isArray(items)) {
-        const newItems = filterItemsById(items, id);
-
-        if (newItems.length !== items.length) { 
-            setLocalStorage(key, newItems);
-        } else {
-            console.log(`Item with id ${id} was not found in ${key}.`);
-        }
-
-    } else {
-        console.log(`Attempted to remove item with id ${id} but the key "${key}" does not exist or is not an array.`);
-    }
+export function removeFromLocalStorage(key) {
+  try {
+    localStorage.removeItem(key);
+  } catch (e) {
+    console.warn(`Could not remove localStorage key ${key}:`, e);
+  }
 }
-
-

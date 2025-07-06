@@ -51,7 +51,7 @@ export function handlePinShowage(e, wallet) {
    if (id !== ADD_FUNDS_ID && id !== ADD_NEW_CARD && id !== TRANSFER_FUNDS && id !== REMOVE_CARD) {
         return false;
    }
-    alert(id);
+
    if (!PIN_ENTERED) {
         showPinErrorMsg('', false);
         pinElement.classList.add("show");

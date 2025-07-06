@@ -1,6 +1,7 @@
 import { getLocalStorage, setLocalStorage } from "./db.js";
 import { compareTwoObjects } from "./utils.js";
 import { logError } from "./logger.js";
+import fetchData from "./fetch.js";
 
 /**
  * Parses FormData and extracts required fields, converting keys to camelCase.
@@ -104,10 +105,13 @@ export function populateForm(formElement, dataObject) {
     
         const input = formElement.querySelector(`[name="${key}"]`);
         if (input) {
+           
             input.value = value;
-            if (!populated) {
-                populated = true;
-            }
+                if (!populated) {
+                    populated = true;
+                }
+            
+          
         }
     }
     return populated;
@@ -118,6 +122,11 @@ export function populateForm(formElement, dataObject) {
 export const profileCache = {
     _KEY: null,
     _CACHE_OBJECT: null,
+
+    
+    doesCacheExist() {
+        return profileCache._CACHE_OBJECT.length === 0 ? false : true;
+    },
 
     /**
      * Sets the key used for caching profile data.
@@ -134,14 +143,29 @@ export const profileCache = {
      * Retrieves the cached profile data. 
      * If not in memory, attempts to fetch from localStorage.
      */
-    getProfileData: () => {
+    getProfileData:  async () => {
         if (!profileCache._KEY) {
             throw new Error("The storage key is not set. Set the key before proceeding.");
         }
 
-        if (profileCache._CACHE_OBJECT === null) {
+    
+        if (profileCache._CACHE_OBJECT === null || profileCache._CACHE_OBJECT === undefined) {
             console.log("Fetching from localStorage...");
+
             profileCache._CACHE_OBJECT = getLocalStorage(profileCache._KEY);
+         
+         
+            if (profileCache._CACHE_OBJECT.length === 0) {
+                const profileData = await profileCache._fetchProfile();
+                if (profileData.DATA) {
+
+                    setLocalStorage(profileCache._KEY, profileData.DATA);
+                    profileCache._CACHE_OBJECT = profileCache._CACHE_OBJECT.DATA;
+                    return profileCache._CACHE_OBJECT;
+                }
+              
+            }
+
         } else {
             console.log("Fetching from in-memory cache...");
         }
@@ -149,12 +173,30 @@ export const profileCache = {
         return profileCache._CACHE_OBJECT;
     },
 
+     /**
+     * Fetches the user profile from the backend via a `fetch` API. 
+     */
+    _fetchProfile: async () => {
+
+        try {
+            const profileData = await fetchData({
+                url: "/profile/get/",
+                method: "GET",
+            });
+            return profileData;
+        } catch (error) {
+            console.error("Failed to fetch profile:", error);
+            throw error;
+        }
+    },
+
+
     /**
      * Adds or updates profile data in cache and localStorage.
      * @param {Object} profileData - The profile data to cache.
      * @returns {boolean} - True if the data was updated successfully, false otherwise.
      */
-    addProfileData: (profileData) => {
+    addProfileData: async (profileData) => {
         if (!profileCache._KEY) {
             throw new Error("The storage key is not set.");
         }
@@ -164,7 +206,7 @@ export const profileCache = {
             return false;
         }
 
-        let previousData = profileCache.getProfileData();
+        let previousData = await profileCache.getProfileData();
         previousData     = Array.isArray(previousData) ? {} : previousData;
  
         try {
