@@ -6,6 +6,8 @@ import { logError } from "./logger.js";
 import { config } from "./config.js";
 import fetchData from './fetch.js'
 import { AlertUtils } from "./alerts.js";
+import { compareTwoObjects } from "./utils.js";
+import { getLocalStorage } from "./db.js";
 
 const accountNameElement = document.getElementById("account-name");
 const accountSurnameElement = document.getElementById("account-surname");
@@ -32,21 +34,45 @@ notificationManager.setKey(config.NOTIFICATION_KEY);
 profileCache.setStorageKey(config.PROFILE_KEY);
 
 
+/**
+ * When the application is first loaded after the user logs in, this function checks whether
+ * profile data already exists in localStorage.
+ *
+ * If it doesn't, a fetch request is made to the backend via `profileCache.getProfileData()`.
+ * Assuming the user has already created a profile, the data is returned,
+ * cached in localStorage, and used to update the UI.
+ *
+ * This approach ensures that when the user's page is refreshed, the profile data is rebuilt
+ * from the cache rather than fetched again from the backend, reducing unnecessary API calls
+ * to the database.
+ */
 document.addEventListener("DOMContentLoaded", () => {
+    (async () => {
+        try {
+            const profileData = await profileCache.getProfileData();
 
-    updateProfileSideBar(profileCache.getProfileData());
-    notificationManager.renderUnReadMessagesCount();
-    updateProfileButtonText();
+            updateProfileSideBar(profileData);
+            notificationManager.renderUnReadMessagesCount();
+            updateProfileButtonText(profileData);
+
+        } catch (error) {
+            console.warn("❌ Error loading profile data:", error);
+        }
+    })();
+});
+
+document.addEventListener("DOMContentLoaded", () => {
 
     profileForm = document.getElementById("profile-form");
     if (profileForm) {
-        console.log("EventListener listening on profile form...")
+        console.log("EventListener listening on profile form...");
         profileForm.addEventListener("submit", handleProfileForm);
     } else {
         console.warn("⚠️ Could not find profile form");
     }
 
-})
+});
+
 
 
 export function handleMobileUserInputField(e) {
@@ -81,7 +107,7 @@ export function handleMobileUserInputField(e) {
 export function handleUserFirstNameInputField(e) {
     const NAME_INPUT_ID = "first-name";
 
-    if (e.target.id != NAME_INPUT_ID) {
+    if (e.target.id !== NAME_INPUT_ID) {
         return;
     }
 
@@ -97,7 +123,7 @@ export function handleUserSurnameInputField(e) {
 
     const SURNAME_INPUT_ID = "surname";
 
-    if (e.target.id != SURNAME_INPUT_ID) {
+    if (e.target.id !== SURNAME_INPUT_ID) {
         return;
     }
 
@@ -112,7 +138,7 @@ export function handleUserEmailInputField(e) {
 
     const EMAIL_INPUT_ID = "email";
 
-    if (e.target.id != EMAIL_INPUT_ID) {
+    if (e.target.id !== EMAIL_INPUT_ID) {
         return;
     }
     const includeChars = ["@", '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
@@ -169,7 +195,7 @@ export function handleDashboardTitle(firstName = '', surname = '') {
 
 function handleInputField({ e, id, element, capitalize = false, onlyChars = true, inclueChars = [" "] }) {
 
-    if (e.target.id != id) {
+    if (e.target.id !== id) {
         return;
     }
 
@@ -190,85 +216,201 @@ function handleInputField({ e, id, element, capitalize = false, onlyChars = true
 
 
 function getFullName(firstName = '', surname = '') {
-    if (typeof firstName != "string" || typeof surname != "string") {
+    if (typeof firstName !== "string" || typeof surname !== "string") {
         throw new Error(`The names must be string. Expected string but got ${firstName} ${surname}`);
     }
     return `${toTitle(firstName)} ${toTitle(surname)}`;
 }
 
 
-// This handles the profile data
+
+
+/**
+ * Handles the profile form submission by determining whether the user 
+ * intends to edit or save their profile and routes the request to the 
+ * appropriate backend API accordingly.
+ * 
+ * Assuming the form function is valid, it reads the button label  to determine the action:
+ * - 'Edit Profile' triggers a call to `handleProfileData(true)`
+ * - 'Save Changes' triggers a call to `handleProfileData()`
+ * 
+ * @param {*} e - The event object from the form submission
+ * @returns {void}
+ */
 async function handleProfileForm(e) {
+
+    e.preventDefault();
   
+
     if (!profileForm.reportValidity()) {
         return;
     }
 
-    e.preventDefault();
-   
+
+
+    const EDIT_BUTTON_NAME = 'Edit Profile';
+    const SAVE_BUTTON_NAME = 'Save Changes';
+
+
+    const BUTTON_NAME = document.getElementById("profile-form-button").textContent.trim();
+
+    switch (BUTTON_NAME) {
+        case EDIT_BUTTON_NAME:
+            await handleProfileData(true);
+            break;
+        case SAVE_BUTTON_NAME:
+            await handleProfileData();
+            break;
+
+    }
+
+
+}
+
+
+
+
+/**
+ * Handles the submission of profile data by either saving new profile details 
+ * or updating existing ones, depending on the `updateProfile` flag.
+ * 
+ * - If `updateProfile` is `false`, the function assumes this is a new profile 
+ *   and sends all required fields to the `/profile/save/` endpoint.
+ * - If `updateProfile` is `true`, it compares the submitted form data with the 
+ *   locally cached profile and sends only the changed fields to the `/profile/update/` endpoint.
+ * 
+ * The function also performs form validation, alerts the user if no changes were made 
+ * in update mode, and handles errors returned from the fetch operation.
+ * 
+ * @param {boolean} [updateProfile=false] - Indicates whether this is an update operation.
+ * @returns {Promise<void>} - Resolves once the data is submitted and the response is handled.
+ */
+async function handleProfileData(updateProfile = false) {
+
+
+
     if (profileForm.checkValidity()) {
 
-        const formData       = new FormData(profileForm);
+        let url = "/profile/save/";
+        const formData = new FormData(profileForm);
         const requiredFields = [
-            "first_name", 
-            "surname", 
+            "first_name",
+            "surname",
             "mobile",
             "gender",
             "maritus_status",
             "country",
-            "state", 
+            "state",
             "postcode",
             "identification_documents",
             "signature"
         ]
+
+        let profileData = parseFormData(formData, requiredFields);
+        console.log(profileData);
+
+        if (!profileData) {
+            logError("handleProfileForm", "Expected data from the profile form but got nothing");
+            return;
+        }
+
+        if (updateProfile) {
+            url = "/profile/update/";
+
+            // compare the profile data extracted from the form and the latest profile data stored in the cache
+            // and return only the changed data. The changed data is the data that will be sent and updated 
+            // in the backend
+            const cachedProfileData = await profileCache.getProfileData()
+            const data              = compareTwoObjects(profileData, cachedProfileData);
+            console.log(data);
+            console.log(cachedProfileData);
+            profileData = data.changes;
+            console.log(profileData)
+
         
-            const profileData = parseFormData(formData, requiredFields);
-          
-            if (!profileData) {
-                logError("handleProfileForm", "Expected data from the profile form but got nothing");
-                return;
-            }
-
-            let resp;
-            try {
-                resp = await fetchData({
-                    url: "/profile/save/",
-                    csrfToken: CSRF_TOKEN,
-                    method: "POST",
-                    body: profileData
-
-                });
-                
-            } catch (error) {
-                 AlertUtils.showAlert({
-                    title: "Profile Information was not saved",
-                    text: error.message,
-                    icon: "error",
-                    confirmButtonText: "Okay",
+            if (profileData === null) {
+                AlertUtils.showAlert({
+                    title: "No action",
+                    text: "No changes were taken since the data wasn't changed",
+                    icon: "info",
+                    confirmButtonText: "continue",
                 })
+
                 return;
             }
-                          
-            handleProfileFetchResponse(resp, resp.DATA);
+
+        }
+
+        let resp;
+        try {
+            resp = await fetchData({
+                url: url,
+                csrfToken: CSRF_TOKEN,
+                method: "POST",
+                body: profileData
+
+            });
+
+        } catch (error) {
+            AlertUtils.showAlert({
+                title: "Profile Information was not saved",
+                text: error.message,
+                icon: "error",
+                confirmButtonText: "Okay",
+            })
+            return;
+        }
+
+
+        handleProfileFetchResponse(resp, resp.DATA);
 
     }
 
 }
 
 
+/**
+ * Handles the response returned after submitting or updating the user's profile.
+ * 
+ * Based on the server's response, it:
+ * - Displays a success alert for either profile creation or update.
+ * - Adds the latest profile data to the local cache via `profileCache.addProfileData`.
+ * - Compares cached data with the newly submitted data to determine if an update occurred.
+ * - If there are changes, notifies the user, resets the form, and toggles the loading spinner.
+ * 
+ * In case of an error or a null response, appropriate alerts are shown to inform the user.
+ * 
+ * @param {Object|null} resp - The response object returned by the backend API.
+ * @param {Object} profileData - The submitted profile data used for updating or creating the profile.
+ * @returns {Promise<void>} - Resolves after processing the response and updating the UI.
+ */
 
-function handleProfileFetchResponse(resp, profileData) {
+async function handleProfileFetchResponse(resp, profileData) {
 
-    if (resp !== null && resp.SUCCESS) {
-        
-        AlertUtils.showAlert({
-            title: "Profile Information saved",
-            text: "Your profile data was successfully saved",
-            icon: "success",
-            confirmButtonText: "Okay",
-        })
+    const TiME_IN_MS = 1000;
 
-        const response = profileCache.addProfileData(profileData);
+    if (resp !== null) {
+
+        if (resp.SUCCESS) {
+            AlertUtils.showAlert({
+                title: "Profile saved",
+                text: "Your profile information has been successfully updated.",
+                icon: "success",
+                confirmButtonText: "Okay",
+            });
+        }
+
+        if (resp.UPDATE) {
+            AlertUtils.showAlert({
+                title: "Profile updated",
+                text: "Your profile information has been successfully updated.",
+                icon: "success",
+                confirmButtonText: "Okay",
+            });
+        }
+
+
+        const response = await profileCache.addProfileData(profileData);
 
         if (response === null) {
             return;
@@ -278,13 +420,12 @@ function handleProfileFetchResponse(resp, profileData) {
             return;
         };
 
-
         if (!response.areEqual) {
 
-            handleProfileSaveNotification(form, response.changes);
+            handleProfileSaveNotification(profileForm, response.changes);
             toggleSpinner(spinnerElement, true, false);
 
-            updateProfileButtonText();
+            updateProfileButtonText(profileData);
 
             setTimeout(() => {
                 profileForm.reset();
@@ -301,13 +442,14 @@ function handleProfileFetchResponse(resp, profileData) {
             confirmButtonText: "Okay",
         })
     } else {
-         AlertUtils.showAlert({
+        AlertUtils.showAlert({
             title: "Profile Information was not saved",
             text: "Error saving the profile data, please refresh or try again later",
             icon: "error",
             confirmButtonText: "Okay",
         })
     }
+
 
 }
 
@@ -335,7 +477,7 @@ function handleProfileSaveNotification(profileFormButtonElement, data) {
 
 function createProfileEditMessage(updatedData) {
 
-    if (updatedData === null || typeof updatedData != "object") {
+    if (updatedData === null || typeof updatedData !== "object") {
         return;
     }
 
@@ -344,57 +486,74 @@ function createProfileEditMessage(updatedData) {
     );
 
     return messages.join("\n");
-    ;
+
 
 }
 
 /**
  * Updates the profile button text based on the presence of profile data in local storage.
  */
-function updateProfileButtonText() {
+function updateProfileButtonText(updateButton = true) {
+    const profileBtn = document.getElementById("profileBtn");
 
-    const profile = profileCache.getProfileData();
-
-    if (typeof profile != "object") {
-        throw new Error("Profile data must be an array.");
+    if (profileBtn) {
+        profileBtn.textContent = updateButton ? "Fetch profile information" : "Edit profile information";
     }
 
-    profileBtn.textContent = profile.length === 0
-        ? "Add profile information"
-        : "Edit profile information";
 }
 
 
-export function handleProfileBtnClick(e) {
+export async function handleProfileBtnClick(e) {
     const PROFilE_BTN = "profileBtn";
 
-    if (e.target.id != PROFilE_BTN) {
+    if (e.target.id !== PROFilE_BTN) {
         return;
     }
 
-    const profile = profileCache.getProfileData();
-    if (typeof profile != "object") {
+
+
+    const profile = await profileCache.getProfileData();
+
+
+    if (typeof profile !== "object") {
         console.warn("No profile data found");
         return;
     }
 
-    const TiME_IN_MS = 200;
 
+    const TiME_IN_MS = 200;
     showSpinnerFor(spinnerElement, TiME_IN_MS);
     updateProfileSideBar(profile);
+
+    // The frontend uses camelCase keys, while Django form expects snake_case.
+    // To populate the Django form correctly and ensure compatibility with the backend,
+    // we map specific keys to snake_case. After populating the form,
+    // we delete the original snake keys to avoid including extra fields
+    // when comparing profile data later to see if the form fields has been changed
+    // later (which could cause false differences).
+    profile.first_name               = profile.firstName ?? '';
+    profile.identification_documents = profile.identificationDocuments;
+    profile.maritus_status           = profile.maritusStatus;
+
+    delete profile.maritusStatus;
+    delete profile.identificationDocuments;
+
     const isPopulated = populateForm(profileForm, profile);
-
-    if (isPopulated) {
+    
+    delete profile.first_name 
+    
+    if (isPopulated && profileCache.doesCacheExist()) {
         profileFormButtonElement.textContent = "Edit Profile";
+    } else {
+      profileFormButtonElement.textContent = "Save Changes";   
     }
-
 
 }
 
 
 function updateProfileSideBar(profile) {
-    if (profile === "null" || typeof profile != "object") {
-        const error = `The profile data cannot be empty and it must be an object. Expected object but got ${typeof profile}`;
+    if (profile === "null" || typeof profile !== "object") {
+        const error = `The profile data cannot be empty and it must be an object. Expected object but got ${typeof profile} with data ${profile}`;
         logError("updatedProfile", error);
         return;
     }

@@ -1,3 +1,4 @@
+from typing import Optional
 from django.db import models
 from django.core.validators import MinValueValidator
 
@@ -131,6 +132,17 @@ class Profile(models.Model):
     signature                = models.CharField(choices=Signature.choices, max_length=1)
     created_on              = models.DateTimeField(auto_now_add=True)
     modified_on             = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        if self.first_name and self.surname:
+         return f"{self.first_name.title()}{self.surname.title()}"
+    
+    @classmethod
+    def get_by_user(cls, user: User) -> Optional[User]:
+        try:
+            return cls.objects.get(user=user)
+        except cls.DoesNotExist:
+            return None
 
     def save(self, *args, **kwargs):
         if not self.email:
