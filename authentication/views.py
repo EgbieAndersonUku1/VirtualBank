@@ -83,6 +83,9 @@ def login_user(request):
 @login_required(login_url="/login/")
 def logout_user(request):
     logout(request)
+    messages.success(request, "You have been logged out.", extra_tags="logout")
+    messages.success(request, "Your session has been cleared. For added security, please close this browser or tab.")
+
     return redirect("home")
 
 

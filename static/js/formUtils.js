@@ -1,4 +1,4 @@
-import { getLocalStorage, setLocalStorage } from "./db.js";
+import { getSessionStorage, setSessionStorage } from "./db.js";
 import { compareTwoObjects } from "./utils.js";
 import { logError } from "./logger.js";
 import fetchData from "./fetch.js";
@@ -148,29 +148,31 @@ export const profileCache = {
             throw new Error("The storage key is not set. Set the key before proceeding.");
         }
 
-    
         if (profileCache._CACHE_OBJECT === null || profileCache._CACHE_OBJECT === undefined) {
             console.log("Fetching from localStorage...");
+            const userProfile = getSessionStorage(profileCache._KEY);
+            if (Array.isArray(userProfile) && userProfile.length === 0) {
 
-            profileCache._CACHE_OBJECT = getLocalStorage(profileCache._KEY);
-         
-         
-            if (profileCache._CACHE_OBJECT.length === 0) {
                 const profileData = await profileCache._fetchProfile();
-                if (profileData.DATA) {
-
-                    setLocalStorage(profileCache._KEY, profileData.DATA);
-                    profileCache._CACHE_OBJECT = profileCache._CACHE_OBJECT.DATA;
+                console.log(profileData)
+                if (profileData) {
+                    
+                    setSessionStorage(profileCache._KEY, profileData.DATA);
+                    profileCache._CACHE_OBJECT = profileData.DATA;
                     return profileCache._CACHE_OBJECT;
                 }
-              
+                return null;
             }
+            profileCache._CACHE_OBJECT = userProfile;
+            return profileCache._CACHE_OBJECT
 
         } else {
             console.log("Fetching from in-memory cache...");
+            console.log(profileCache._CACHE_OBJECT)
+            return profileCache._CACHE_OBJECT;
         }
 
-        return profileCache._CACHE_OBJECT;
+      
     },
 
      /**
@@ -190,8 +192,24 @@ export const profileCache = {
         }
     },
 
+    /**
+     * Clears the profile cache
+     */
+    clearCache: () => {
+        profileCache._CACHE_OBJECT = null;
+    },
 
     /**
+     * Adds or updates profile data in cache and localStorage.
+     * @param {Object} profileData - The profile data to cache.
+     * @returns {boolean} - True if the data was updated successfully, false otherwise.
+     */
+     /**
+     * Adds or updates profile data in cache and localStorage.
+     * @param {Object} profileData - The profile data to cache.
+     * @returns {boolean} - True if the data was updated successfully, false otherwise.
+     */
+   /**
      * Adds or updates profile data in cache and localStorage.
      * @param {Object} profileData - The profile data to cache.
      * @returns {boolean} - True if the data was updated successfully, false otherwise.
@@ -211,11 +229,11 @@ export const profileCache = {
  
         try {
             const data = compareTwoObjects(previousData, profileData);
-        
+       
             if (!data.areEqual) {
                 console.log("Saving to cache and localStorage...");
                 try {
-                    setLocalStorage(profileCache._KEY, profileData);
+                    setSessionStorage(profileCache._KEY, profileData);
                     profileCache._CACHE_OBJECT = profileData;
                     return data;
                 } catch (error) {

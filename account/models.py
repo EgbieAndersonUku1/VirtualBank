@@ -1,19 +1,20 @@
 from typing import Optional
 from django.db import models
 from django.core.validators import MinValueValidator
-
+from secrets import token_hex
 
 from authentication.models import User
 from utils.generator import generate_code
-from .utils.utils import current_year_choices
+from .utils.utils import current_year_choices, profile_to_dict
+
 
 # Create your models here.
 
 class BankAccount(models.Model):
-
-    sort_code      = models.CharField(max_length=6, unique=True, db_index=True, default=generate_code(maximum_length=6))
-    account_number = models.CharField(max_length=8, unique=True, db_index=True, default=generate_code(maximum_length=8))
-    amount         = models.DecimalField(max_digits=10,decimal_places=2, validators=[MinValueValidator(0)])
+    bank_id        = models.CharField(max_length=40, unique=True, db_index=True, blank=True, null=True)
+    sort_code      = models.CharField(max_length=6, unique=True, db_index=True, blank=True)
+    account_number = models.CharField(max_length=8, unique=True, db_index=True, blank=True)
+    amount         = models.DecimalField(max_digits=10,decimal_places=2, validators=[MinValueValidator(0)], default=0)
     user           = models.ForeignKey(User, on_delete=models.CASCADE, related_name="account")
     created_on     = models.DateTimeField(auto_now_add=True)
     modified_on    = models.DateTimeField(auto_now=True)
@@ -23,6 +24,8 @@ class BankAccount(models.Model):
             models.Index(fields=['sort_code', 'account_number'])
         ]
 
+    def __str__(self):
+        return f"{self.sort_code}{self.account_number}"
 
     @property
     def full_account_number(self):
@@ -32,6 +35,31 @@ class BankAccount(models.Model):
     def pin(self):
         return self.user.pin
     
+    @classmethod
+    def get_by_account_number(cls, sort_code, account_number):
+        
+        try:
+            return cls.objects.get(sort_code=sort_code, account_number=account_number)
+        except cls.DoesNotExist:
+            return None
+        
+    @classmethod
+    def get_by_user(cls, user):
+        try:
+            return cls.objects.get(user=user)
+        except cls.DoesNotExist:
+            return None
+        
+    def save(self, *args, **kwargs):
+
+        if not self.account_number:
+            self.account_number =  generate_code(6) 
+        if not self.sort_code:
+            self.sort_code = generate_code(8)
+        if self.bank_id is None:
+            self.bank_id = token_hex()
+
+        super().save(*args, **kwargs)
 
 
 class Card(models.Model):
@@ -118,6 +146,7 @@ class Profile(models.Model):
         UPLOAD_SIGNATURE = "u", "Upload signature"
         DRAW_SIGNATURE   = "d", "Draw signature"
 
+    profile_id               = models.CharField(max_length=64, unique=True, blank=True, null=True, db_index=True)
     first_name               = models.CharField(max_length=40)
     surname                  = models.CharField(max_length=40)
     email                    = models.EmailField(max_length=40, blank=True)
@@ -127,7 +156,7 @@ class Profile(models.Model):
     postcode                 = models.CharField(max_length=10)
     gender                   = models.CharField(choices=Gender.choices, max_length=1)
     maritus_status           = models.CharField(choices=Maritus_Status.choices, max_length=4)
-    user                     = models.OneToOneField(User, on_delete=models.CASCADE, unique=True)
+    user                     = models.OneToOneField(User, on_delete=models.CASCADE, unique=True, db_index=True, related_name="profile")
     identification_documents = models.CharField(choices=IdentificationType.choices, max_length=1)
     signature                = models.CharField(choices=Signature.choices, max_length=1)
     created_on              = models.DateTimeField(auto_now_add=True)
@@ -135,7 +164,7 @@ class Profile(models.Model):
 
     def __str__(self):
         if self.first_name and self.surname:
-         return f"{self.first_name.title()}{self.surname.title()}"
+          return f"{self.first_name.title()}{self.surname.title()}"
     
     @classmethod
     def get_by_user(cls, user: User) -> Optional[User]:
@@ -144,7 +173,12 @@ class Profile(models.Model):
         except cls.DoesNotExist:
             return None
 
+    def to_json(self):
+       return profile_to_dict(self)
+    
     def save(self, *args, **kwargs):
         if not self.email:
             self.email = self.user.email.lower()
+        if not self.profile_id:
+            self.profile_id = token_hex()
         return super().save(*args, **kwargs)

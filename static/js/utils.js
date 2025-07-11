@@ -1,6 +1,7 @@
 import { logError } from "./logger.js";
 import { specialChars } from "./specialChars.js";
-
+import { getLocalStorage, removeFromLocalStorage, setLocalStorage, setSessionStorage } from "./db.js";
+import { config } from "./config.js";
   
 export function checkIfHTMLElement(element, elementName = "Unknown") {
     if (!(element instanceof HTMLElement || element instanceof DocumentFragment)) {
@@ -601,3 +602,31 @@ export function parseErrorMessage(errorMsg) {
     return {title, text}
     
 } 
+
+
+// In most web browsers like Chrome or Firefox, data stored in localStorage persists 
+// across sessions, which is useful. However, if the application's data schema or logic 
+// changes (e.g., after an update), the cached localStorage data may become outdated or 
+// incompatible. Since browsers don’t automatically clear or update localStorage on app updates, 
+// stale data may remain until the user manually clears it or performs a hard refresh.
+// 
+// To handle this, the app stores a version number in localStorage. When the app version changes, 
+// it clears relevant localStorage keys and updates the stored version number.
+// This forces the app to start fresh with the latest data, preventing inconsistencies caused 
+// by old cached values.
+export function handleAppVersionUpdate() {
+  const APP_VERSION     = config.APP_VERSION; 
+  const KEY             = "appVersion";
+  const CURRENT_VERSION = getLocalStorage(KEY);
+
+  console.log("Checking version app, please wait...")
+  if (CURRENT_VERSION !== APP_VERSION) {
+    console.warn(`App version changed from ${CURRENT_VERSION || 'none'} to ${APP_VERSION}. Clearing localStorage.`);
+
+    [config.PROFILE_KEY, config.WALLET_STORAGE_KEY, config.NOTIFICATION_KEY].forEach((key) => {
+      removeFromLocalStorage(key);
+    });
+
+    setLocalStorage(KEY, APP_VERSION);
+  }
+}

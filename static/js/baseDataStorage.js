@@ -1,4 +1,4 @@
-import { getLocalStorage, setLocalStorage } from "./db.js";
+import { getSessionStorage, setSessionStorage } from "./db.js";
 import { warnError, logError } from "./logger.js";
 
 
@@ -67,7 +67,7 @@ export class DataStorage {
         }
 
 
-        let storage = getLocalStorage(storageKey);
+        let storage = getSessionStorage(storageKey);
         if (Array.isArray(storage)) {
             warnError("saveData", `No data found for storage card key: ${storageKey}`);
             warnError("saveData", `Creating a new storage object for key: ${storageKey}`);
@@ -77,7 +77,7 @@ export class DataStorage {
         try {
 
             storage[storageKey][saveAs] = data;
-            setLocalStorage(storageKey, storage);
+            setSessionStorage(storageKey, storage);
             return true;
 
         } catch (error) {

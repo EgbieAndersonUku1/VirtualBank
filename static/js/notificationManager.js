@@ -1,4 +1,4 @@
-import { setLocalStorage, getLocalStorage } from "./db.js"
+import { setSessionStorage, getSessionStorage } from "./db.js"
 import { generateRandomID, checkIfHTMLElement, findByIndex } from "./utils.js"
 import { logError } from "./logger.js";
 
@@ -75,7 +75,7 @@ export const notificationManager = {
             throw new Error(error);
         }
 
-        let notificationsArray = getLocalStorage(notificationManager._NOTIFICATION_KEY);
+        let notificationsArray = getSessionStorage(notificationManager._NOTIFICATION_KEY);
 
         if (!notificationsArray || !Array.isArray(notificationsArray)) {
             notificationsArray = []; 
@@ -112,7 +112,7 @@ export const notificationManager = {
     getNotifications: (unread = true) => {
         if (notificationManager._notifications === null) { 
             try {
-                const notificationsArray           = getLocalStorage(notificationManager._NOTIFICATION_KEY) || [];
+                const notificationsArray           = getSessionStorage(notificationManager._NOTIFICATION_KEY) || [];
                 notificationManager._notifications = notificationsArray;
             } catch (error) {
                 logError("getNotifications", error);
@@ -534,7 +534,7 @@ export const notificationManager = {
      _save:() => {
         try {
 
-            setLocalStorage(notificationManager._NOTIFICATION_KEY, notificationManager._notifications);
+            setSessionStorage(notificationManager._NOTIFICATION_KEY, notificationManager._notifications);
             notificationManager._updateReadCount();
 
             const unReadNotificationCount = notificationManager.getNumOfUnreadMessage()

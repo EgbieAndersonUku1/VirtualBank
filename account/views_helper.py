@@ -26,25 +26,6 @@ def api_response( success: bool = False,
     }, status=status_code)
 
 
-
-def profile_to_dict(profile):
-    
-    return {
-        "firstName": profile.first_name,
-        "surname": profile.surname,
-        "mobile": profile.mobile,
-        "gender": profile.gender,
-        "maritusStatus": profile.maritus_status,
-        "country": profile.country,
-        "state": profile.state,
-        "postcode": profile.postcode,
-        "identificationDocuments": profile.identification_documents,
-        "signature": profile.signature,
-       
-      
-}
-
-
 def handle_profile_json(request, func, extract_profile_data, update = False):
     """
     Handles a JSON-based POST request to create or update a user profile.
@@ -89,7 +70,7 @@ def handle_profile_json(request, func, extract_profile_data, update = False):
             raise ValueError(f"The data is not an instance of dictionary. Expected the data object to be type dictionary but got type {type(data)}")
         
         profile = func(data, request)
-       
+              
     except json.JSONDecodeError as e:
         error_msg = f'Invalid JSON data: {str(e)}'
         return api_response(error=error_msg, status_code=400)

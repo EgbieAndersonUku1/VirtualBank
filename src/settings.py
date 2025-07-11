@@ -88,7 +88,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
 
                  # my apps context_processor
-                 'authentication.context_processors.show_pin',
+                 'authentication.context_processors.show_user_information',
             ],
         },
     },

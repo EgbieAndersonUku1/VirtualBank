@@ -1,4 +1,4 @@
-import { getLocalStorage } from "./db.js";
+import { getSessionStorage } from "./db.js";
 import { getCombinedCode, generateRandomID, checkNumber } from './utils.js';
 import { logError } from "./logger.js";
 import { Card } from "./card.js";
@@ -59,7 +59,7 @@ export class BankAccount extends DataStorage {
 
         const fullAccountNumber = getCombinedCode(sortCode, accountNumber);
 
-        const bankAccounts = getLocalStorage(BANK_ACCOUNT_STORAGE_KEY);
+        const bankAccounts = getSessionStorage(BANK_ACCOUNT_STORAGE_KEY);
 
 
         if (Array.isArray(bankAccounts) || typeof bankAccounts !== "object") {
