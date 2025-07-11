@@ -4,7 +4,7 @@ import { DataStorage } from "./baseDataStorage.js";
 import { AmountManager } from "./baseAmountManager.js";
 import { checkNumber, generateRandomID, excludeKey, formatCurrency } from "./utils.js";
 import { logError, warnError } from "./logger.js";
-import { getLocalStorage } from "./db.js";
+import { getSessionStorage } from "./db.js";
 import { config } from "./config.js";
 
 
@@ -152,7 +152,7 @@ export class Wallet extends DataStorage {
      * @returns {object} - Returns the entire data belong to the wallet
     */
     static _getDataFromLocalStorage() {
-        const walletData = getLocalStorage(WALLET_STORAGE_KEY)
+        const walletData = getSessionStorage(WALLET_STORAGE_KEY)
         if (walletData) {
             return walletData[WALLET_STORAGE_KEY]
         }

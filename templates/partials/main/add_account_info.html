@@ -14,7 +14,7 @@
                 <span id="account-state" class="profile-information"></span>
                 <span id="account-postcode" class="profile-information"></span>
                 <span id="account-mobile" class="profile-information"></span>
-                <p class="status green">Active</p>
+                <p class="status green">{{ IS_ACTIVE }}</p>
             </div>
 
             <hr>
@@ -22,7 +22,7 @@
             <div class="body">
                 <div class="account-information">
                     <p class="bold">Account No:</p>
-                    <p>400217 00327502 </p>
+                    <p>{{ bank_account.sort_code }} {{ bank_account.account_number }}</p>
                 </div>
 
                 <div class="account-information">
@@ -39,7 +39,7 @@
             <hr>
 
             <div class="footer center flex-direction-column">
-                <small class="green">Logged in</small>
+                <small class="green">{{ LOGGED_IN }}</small>
              
                 <button type="button" id="profileBtn" class="button margin-top-sm">Add Profile</button>
                 

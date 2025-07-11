@@ -5,12 +5,12 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest
 
 from .utils.errors import ProfileAlreadyExistsError, UserDoesNotExistError
-from .views_helper import (profile_to_dict, 
-                           handle_profile_json,
+from .views_helper import (handle_profile_json,
                            update_changed_profile_fields, 
-                            
-                             api_response)
+                            api_response
+                            )
 from .models import Profile
+from .utils.utils import profile_to_dict
 
 
 
@@ -74,8 +74,8 @@ def save_profile_details(request):
         if Profile.objects.filter(user=user).exists():
             raise ProfileAlreadyExistsError("Profile for this user already exists")
                 
-        profile = Profile.objects.create(user=request.user,
-    
+        profile = Profile.objects.create(
+            user=request.user,
             first_name=data.get("firstName"),
             surname=data.get("surname"),
             mobile=data.get("mobile"),
@@ -85,15 +85,12 @@ def save_profile_details(request):
             state=data.get("state"),
             postcode= data.get("postcode"),
             signature=data.get("signature"),
-            identification_documents=data.get("identificationDocuments")
-                        
+            identification_documents=data.get("identificationDocuments"),
         )
         return profile
 
     return handle_profile_json(request, create_profile, profile_to_dict)  
        
-   
-
 @csrf_protect
 @login_required
 def update_profile_details(request):

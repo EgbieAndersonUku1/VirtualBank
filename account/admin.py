@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import BankAccount, Profile,  Wallet
+from .models import BankAccount, Profile,  Wallet, BankAccount
 
 
 # Register your models here.
@@ -10,13 +10,13 @@ class ProfileAdmin(admin.ModelAdmin):
     list_per_page        = 25
     list_filter          = ["maritus_status", "gender"]
     search_fields        = ["first_name", "surname", "email", "country", "mobile", "state"]
-    readonly_fields      = ["created_on", "modified_on"]
+    readonly_fields      = ["created_on", "modified_on", "profile_id"]
 
     fieldsets = [
         (
             None,
             {
-                "fields": ["first_name", "surname", "email","mobile", "gender", "user"],
+                "fields": ["profile_id", "first_name", "surname", "email","mobile", "gender", "user"],
             },
         ),
         (
@@ -37,5 +37,5 @@ class ProfileAdmin(admin.ModelAdmin):
 
 
 
-
 admin.site.register(Profile, ProfileAdmin)
+

@@ -2,11 +2,11 @@
 import { excludeKey } from "./utils.js";
 import { generateRandomID, checkNumber } from "./utils.js";
 import { DataStorage } from "./baseDataStorage.js";
-import { getLocalStorage } from "./db.js";
+import { getSessionStorage } from "./db.js";
 import { AmountManager } from "./baseAmountManager.js";
 import { logError, warnError } from "./logger.js";
 import { config } from "./config.js";
-import { setLocalStorage } from "./db.js";
+import { setSessionStorage } from "./db.js";
 
 const CARD_STORAGE_KEY = config.CARD_STORAGE_KEY;
 
@@ -91,7 +91,7 @@ export class Card extends DataStorage {
     }
 
     static _doesCardExists(cardNumber) {
-        const storage = getLocalStorage(CARD_STORAGE_KEY);
+        const storage = getSessionStorage(CARD_STORAGE_KEY);
     
         if (typeof storage !== "object" || storage === null) {
             return false;
@@ -111,7 +111,7 @@ export class Card extends DataStorage {
     
 
     static deleteCard(cardNumber) {
-        const cardDetails = getLocalStorage(CARD_STORAGE_KEY);
+        const cardDetails = getSessionStorage(CARD_STORAGE_KEY);
 
         if (Array.isArray(cardDetails) || typeof cardDetails !== "object") {
             logError("wallet.deleteCard", `Expected an object but got type ${typeof cardDetails}`);
@@ -132,7 +132,7 @@ export class Card extends DataStorage {
         }
         
         const updatedCardDetails  = excludeKey(cardDetails, cardNumber);
-        setLocalStorage(CARD_STORAGE_KEY, updatedCardDetails);
+        setSessionStorage(CARD_STORAGE_KEY, updatedCardDetails);
         return true;
 
     }
@@ -161,7 +161,7 @@ export class Card extends DataStorage {
     }
 
     static _fetchCardFromStorage() {
-        const cardDetails = getLocalStorage(CARD_STORAGE_KEY);
+        const cardDetails = getSessionStorage(CARD_STORAGE_KEY);
 
         if (Array.isArray(cardDetails) || typeof cardDetails !== "object") {
             logError("getByCardNumber", `Expected an object but got type ${cardDetails}`);

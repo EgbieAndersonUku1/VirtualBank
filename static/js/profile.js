@@ -7,7 +7,7 @@ import { config } from "./config.js";
 import fetchData from './fetch.js'
 import { AlertUtils } from "./alerts.js";
 import { compareTwoObjects } from "./utils.js";
-import { getLocalStorage } from "./db.js";
+import { handleAppVersionUpdate } from "./utils.js";
 
 const accountNameElement = document.getElementById("account-name");
 const accountSurnameElement = document.getElementById("account-surname");
@@ -17,11 +17,10 @@ const accountLocationElement = document.getElementById("account-location");
 const accountStateElement = document.getElementById("account-state");
 const accountPostcodeElement = document.getElementById("account-postcode")
 const dashboardTitleElement = document.getElementById("dashboard-title");
-// const profileFormElement       = document.getElementById("profile-form");
-const profileBtn = document.getElementById("profileBtn");
 const spinnerElement = document.getElementById("spinner2");
-const profileFormButtonElement = document.getElementById("profile-form-button");
-const CSRF_TOKEN = document.getElementById("profile-form").querySelector("input[type='hidden']").value;
+const profileFormButtonElement  = document.getElementById("profile-form-button");
+const CSRF_TOKEN                = document.getElementById("profile-form").querySelector("input[type='hidden']").value;
+
 
 
 
@@ -50,11 +49,12 @@ document.addEventListener("DOMContentLoaded", () => {
     (async () => {
         try {
             const profileData = await profileCache.getProfileData();
-
+            console.log(profileData);
             updateProfileSideBar(profileData);
+           
+            updateProfileButtonText(profileData ? true: false);
             notificationManager.renderUnReadMessagesCount();
-            updateProfileButtonText(profileData);
-
+         
         } catch (error) {
             console.warn("❌ Error loading profile data:", error);
         }
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-
+    handleAppVersionUpdate();
     profileForm = document.getElementById("profile-form");
     if (profileForm) {
         console.log("EventListener listening on profile form...");
@@ -253,6 +253,7 @@ async function handleProfileForm(e) {
 
 
     const BUTTON_NAME = document.getElementById("profile-form-button").textContent.trim();
+    console.log(BUTTON_NAME)
 
     switch (BUTTON_NAME) {
         case EDIT_BUTTON_NAME:
@@ -307,8 +308,7 @@ async function handleProfileData(updateProfile = false) {
         ]
 
         let profileData = parseFormData(formData, requiredFields);
-        console.log(profileData);
-
+       
         if (!profileData) {
             logError("handleProfileForm", "Expected data from the profile form but got nothing");
             return;
@@ -322,12 +322,8 @@ async function handleProfileData(updateProfile = false) {
             // in the backend
             const cachedProfileData = await profileCache.getProfileData()
             const data              = compareTwoObjects(profileData, cachedProfileData);
-            console.log(data);
-            console.log(cachedProfileData);
-            profileData = data.changes;
-            console.log(profileData)
-
-        
+            profileData             = data.changes;
+         
             if (profileData === null) {
                 AlertUtils.showAlert({
                     title: "No action",
@@ -350,6 +346,8 @@ async function handleProfileData(updateProfile = false) {
                 body: profileData
 
             });
+
+          
 
         } catch (error) {
             AlertUtils.showAlert({
@@ -398,6 +396,9 @@ async function handleProfileFetchResponse(resp, profileData) {
                 icon: "success",
                 confirmButtonText: "Okay",
             });
+
+            updateProfileButtonText(true);
+            updateFormTextButton(true);
         }
 
         if (resp.UPDATE) {
@@ -408,7 +409,6 @@ async function handleProfileFetchResponse(resp, profileData) {
                 confirmButtonText: "Okay",
             });
         }
-
 
         const response = await profileCache.addProfileData(profileData);
 
@@ -426,7 +426,7 @@ async function handleProfileFetchResponse(resp, profileData) {
             toggleSpinner(spinnerElement, true, false);
 
             updateProfileButtonText(profileData);
-
+        
             setTimeout(() => {
                 profileForm.reset();
                 toggleSpinner(spinnerElement, false);
@@ -497,11 +497,11 @@ function updateProfileButtonText(updateButton = true) {
     const profileBtn = document.getElementById("profileBtn");
 
     if (profileBtn) {
-        profileBtn.textContent = updateButton ? "Fetch profile information" : "Edit profile information";
+        profileBtn.textContent = updateButton  ? "Fetch profile information" : "Edit profile information";
+
     }
 
 }
-
 
 export async function handleProfileBtnClick(e) {
     const PROFilE_BTN = "profileBtn";
@@ -542,12 +542,17 @@ export async function handleProfileBtnClick(e) {
     
     delete profile.first_name 
     
-    if (isPopulated && profileCache.doesCacheExist()) {
+    updateFormTextButton((isPopulated && profileCache.doesCacheExist()));
+
+}
+
+
+function updateFormTextButton(updateTextButton) {
+    if (updateTextButton) {
         profileFormButtonElement.textContent = "Edit Profile";
     } else {
       profileFormButtonElement.textContent = "Save Changes";   
     }
-
 }
 
 
@@ -557,6 +562,8 @@ function updateProfileSideBar(profile) {
         logError("updatedProfile", error);
         return;
     }
+
+
 
     accountNameElement.textContent = toTitle(profile.firstName || '') || "Not added";
     accountSurnameElement.textContent = toTitle(profile.surname || '') || "Not added";
