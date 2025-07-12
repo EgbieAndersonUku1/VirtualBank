@@ -1,7 +1,6 @@
 from typing import Optional
 from django.db import models
 from django.core.validators import MinValueValidator
-from secrets import token_hex
 
 from authentication.models import User
 from utils.generator import generate_code
@@ -28,6 +27,14 @@ class BankAccount(models.Model):
         return f"{self.sort_code}{self.account_number}"
 
     @property
+    def username(self):
+        return self.user.username
+    
+    @property
+    def email(self):
+        return self.user.email
+    
+    @property
     def full_account_number(self):
         return f"{self.sort_code}{self.account_number}"
     
@@ -50,18 +57,7 @@ class BankAccount(models.Model):
         except cls.DoesNotExist:
             return None
         
-    def save(self, *args, **kwargs):
-
-        if not self.account_number:
-            self.account_number =  generate_code(6) 
-        if not self.sort_code:
-            self.sort_code = generate_code(8)
-        if self.bank_id is None:
-            self.bank_id = token_hex()
-
-        super().save(*args, **kwargs)
-
-
+  
 class Card(models.Model):
 
     class Month(models.TextChoices):
@@ -101,15 +97,65 @@ class Card(models.Model):
 
 
 class Wallet(models.Model):
-    wallet_id             = models.CharField(default=generate_code(maximum_length=11), unique=True)
-    amount                = models.DecimalField(max_digits=10,decimal_places=2, validators=[MinValueValidator(0)])
-    cards                 = models.ForeignKey(Card, on_delete=models.CASCADE)
-    total_cards           = models.SmallIntegerField(validators=[MinValueValidator(0)])
-    last_transfer         = models.DateTimeField(auto_now=True)
-    last_amount_received  = models.DecimalField(max_digits=10,decimal_places=2, validators=[MinValueValidator(0)])
-    maximum_cards         = models.SmallIntegerField(validators=[MinValueValidator(0)])
+    wallet_id             = models.CharField(max_length=64, unique=True, db_index=True)
+    amount                = models.DecimalField(max_digits=10,decimal_places=2, validators=[MinValueValidator(0)], default=0)
+    cards                 = models.ForeignKey(Card, on_delete=models.SET_NULL, blank=True, null=True, related_name="wallet")
+    total_cards           = models.SmallIntegerField(validators=[MinValueValidator(0)], default=0, blank=True, null=True)
+    last_amount_received  = models.DecimalField(max_digits=10,decimal_places=2, validators=[MinValueValidator(0)], default=0)
+    maximum_cards         = models.SmallIntegerField(validators=[MinValueValidator(0)], default=3)
+    user                  = models.ForeignKey(User, on_delete=models.CASCADE, db_index=True, blank=True, null=True)
+    bank_account          = models.ForeignKey(BankAccount, models.SET_NULL, blank=True, null=True, db_index=True)
     created_on            = models.DateTimeField(auto_now_add=True)
     modified_on           = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["wallet_id", "user", "bank_account"])
+        ]
+
+    def __str__(self):
+        return self.wallet_id
+
+    @property
+    def pin(self):
+        return self.user.pin
+    
+    @property
+    def email(self):
+        return self.user.email 
+    
+    @property
+    def username(self):
+        return self.user.username
+    
+    @classmethod
+    def get_by_wallet_id(cls, wallet_id):
+        """"""
+        return cls._get_by_helper("wallet_id", wallet_id)
+
+    @classmethod
+    def get_by_bank(cls, bank):
+        return cls._get_by_helper("bank", bank)
+    
+    @classmethod
+    def get_by_user(cls, user):
+        return cls._get_by_helper("user", user)
+
+    @classmethod
+    def _get_by_helper(cls, field_name, field_value):
+        try:
+            if field_name == "bank":
+                return cls.objects.get(bank_account=field_value)
+            if field_name == "user":
+                return cls.objects.get(user=field_value)
+            if field_name == "wallet_id":
+                return cls.objects.get(wallet_id=field_value)
+        except cls.DoesNotExist:
+            return
+        
+    @property
+    def is_bank_connected(self):
+        return self.bank is not None
 
 
 class Profile(models.Model):
@@ -175,10 +221,3 @@ class Profile(models.Model):
 
     def to_json(self):
        return profile_to_dict(self)
-    
-    def save(self, *args, **kwargs):
-        if not self.email:
-            self.email = self.user.email.lower()
-        if not self.profile_id:
-            self.profile_id = token_hex()
-        return super().save(*args, **kwargs)

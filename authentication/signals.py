@@ -1,7 +1,6 @@
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import pre_save
 from django.dispatch import receiver
-from .models import User, Verification
-from account.models import BankAccount, Profile
+from .models import User
 
 
 @receiver(pre_save, sender=User)
