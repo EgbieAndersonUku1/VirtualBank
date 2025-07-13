@@ -56,7 +56,14 @@ class BankAccount(models.Model):
             return cls.objects.get(user=user)
         except cls.DoesNotExist:
             return None
-        
+    
+    def add_amount(amount: float) -> None:
+        pass
+
+    def deduct_amount(amount: float) -> None:
+        pass
+
+
   
 class Card(models.Model):
 
@@ -91,9 +98,17 @@ class Card(models.Model):
     card_options = models.CharField(choices=Month.choices, max_length=3)
     card_type    = models.CharField(choices=CardType.choices, max_length=1)
     cvc          = models.CharField(max_length=3)
+    bank_account = models.ForeignKey(BankAccount, on_delete=models.CASCADE, related_name="card")
     account      = models.ForeignKey(BankAccount, on_delete=models.CASCADE, related_name="cards")
     created_on   = models.DateTimeField(auto_now_add=True)
     modified_on  = models.DateTimeField(auto_now=True)
+
+    def add_amount(amount: float) -> None:
+        pass
+
+    def deduct_amount(amount: float) -> None:
+        pass
+
 
 
 class Wallet(models.Model):
@@ -156,6 +171,13 @@ class Wallet(models.Model):
     @property
     def is_bank_connected(self):
         return self.bank is not None
+
+    def add_amount(amount: float) -> None:
+        pass
+
+    def deduct_amount(amount: float) -> None:
+        pass
+
 
 
 class Profile(models.Model):
@@ -221,3 +243,53 @@ class Profile(models.Model):
 
     def to_json(self):
        return profile_to_dict(self)
+
+
+
+class TransferService:
+
+    @classmethod
+    def transfer_from_card_to_bank(cls, card: Card, bank_account: BankAccount, amount: float) -> bool:
+        cls._validate_card(card)
+        cls._validate_bank_account(bank_account)
+        cls._is_amount_valid(amount)
+
+        # to be added
+    
+    @classmethod
+    def transfer_from_bank_to_wallet(cls, bank_account: BankAccount, wallet: Wallet, amount: float):
+        cls._validate_bank_account(bank_account)
+        cls._validate_wallet(wallet)
+        cls._is_amount_valid(amount)
+         # to be added
+
+    @classmethod
+    def transfer_from_wallet_to_bank(cls, bank_account: BankAccount, wallet: Wallet, amount: float) -> bool:
+        cls._validate_bank_account(bank_account)
+        cls._validate_wallet(wallet)
+        cls._is_amount_valid(amount)
+
+        # to be added
+
+    @classmethod
+    def transfer_funds_between_cards(cls, source_card: Card, target_card: Card, amount):
+        cls._validate_card(source_card)
+        cls._validate_card(target_card)
+        cls._is_amount_valid(amount)
+
+    @staticmethod
+    def _is_amount_valid(amount: float) -> bool:
+        pass
+
+    @staticmethod
+    def _validate_bank_account(bank_account: BankAccount):
+        pass
+
+    @staticmethod
+    def _validate_wallet(wallet: Wallet):
+        pass
+
+    @staticmethod
+    def _validate_card(card: Card):
+        pass
+
