@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'account.apps.AccountConfig',
     'authentication.apps.AuthenticationConfig',
     'home.apps.HomeConfig',
+    'funds.apps.FundsConfig',
     
     # third party apps
     'django.contrib.admin',
