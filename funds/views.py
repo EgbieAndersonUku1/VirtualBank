@@ -16,3 +16,8 @@ def add_fund_to_wallet(request):
 def add_fund_to_bank_account(request):
     pass 
 
+
+@csrf_protect
+@login_required
+def add_fund_to_wallet(request):
+    pass
