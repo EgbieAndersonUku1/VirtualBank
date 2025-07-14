@@ -173,4 +173,3 @@ def get_profile_details(request):
     return api_response(status_code=400, message="Failed to retrieve data", success=True, data={})    
 
  
-

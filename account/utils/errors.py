@@ -86,3 +86,39 @@ class UserDoesNotExistError(CustomBaseError):
     def __init__(self, message="The user doesn't exist"):
         super().__init__(message)
 
+
+class WalletInsufficientFundsError(CustomBaseError):
+    """
+    Raised when an operation attempts to withdraw or transfer more funds 
+    than are available in the wallet.
+
+    This exception is typically used in transaction-related logic where 
+    the user's wallet balance is checked before proceeding.
+
+    Inherits from:
+        CustomBaseError
+
+    Default message:
+        "The wallet has insufficient funds"
+    """
+    def __init__(self, message="The wallet has insufficient funds"):
+        super().__init__(message)
+
+
+
+class BankInsufficientFundsError(CustomBaseError):
+    """
+    Raised when an operation attempts to withdraw or transfer more funds 
+    than are available in the bank account.
+
+    This exception is typically used in transaction-related logic where 
+    the user's bank balance is checked before proceeding.
+
+    Inherits from:
+        CustomBaseError
+
+    Default message:
+        "The bank account has insufficient funds"
+    """
+    def __init__(self, message="The bank account has insufficient funds"):
+        super().__init__(message)
