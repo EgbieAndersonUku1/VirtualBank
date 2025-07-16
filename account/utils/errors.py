@@ -122,3 +122,21 @@ class BankInsufficientFundsError(CustomBaseError):
     """
     def __init__(self, message="The bank account has insufficient funds"):
         super().__init__(message)
+
+
+class BankAccountIsNotConnectedToWalletError(CustomBaseError):
+    """
+    Raised when an operation attempts to withdraw or transfer funds 
+    from a bank account that is not connected to the wallet
+
+    This exception is typically used in transaction-related logic where 
+    the user's bank balance is not connected to their wallet.
+
+    Inherits from:
+        CustomBaseError
+
+    Default message:
+        "The bank account is not connected to the wallet"
+    """
+    def __init__(self, message="The bank account is not connected to the wallet"):
+        super().__init__(message)
