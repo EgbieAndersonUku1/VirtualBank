@@ -6,9 +6,9 @@ from django.core.exceptions import ValidationError
 from freezegun import freeze_time
 
 
-from .models import BankAccount, Wallet
+from ..models import BankAccount, Wallet
 from authentication.models import User
-from .utils.errors import BankInsufficientFundsError
+from ..utils.errors import BankInsufficientFundsError
 
 
 # Create your tests here.

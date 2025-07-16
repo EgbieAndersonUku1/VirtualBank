@@ -1,12 +1,15 @@
 from typing import Optional
 from django.db import models
 from django.core.validators import MinValueValidator
-
+from decimal import Decimal
 
 from authentication.models import User
 from utils.generator import generate_code
 from .utils.utils import current_year_choices, profile_to_dict
-from .utils.errors import BankInsufficientFundsError, WalletInsufficientFundsError
+from .utils.errors import (BankInsufficientFundsError,
+                            WalletInsufficientFundsError, 
+                            BankAccountIsNotConnectedToWalletError
+                            )
 
 
 # Create your models here.
@@ -20,6 +23,7 @@ class BalanceMixin:
         return getattr(self, self.amount_field)
 
     def _set_amount(self, new_amount: float) -> None:
+        self._is_amount_valid(new_amount)
         setattr(self, self.amount_field, new_amount)
         self.save(update_fields=[self.amount_field])
 
@@ -33,9 +37,15 @@ class BalanceMixin:
             raise ExceptionErrorClass(message)
         self._set_amount(current - amount)
 
+    def _is_amount_valid(self, amount: float) -> bool:
+        if not isinstance(amount, (float, int, Decimal)):
+            raise TypeError(f"The amount must be type float, int or decimal but got type {type(amount)}")
+        return True
+    
     def _validate_amount_field(self) -> None:
         if not hasattr(self, self.amount_field):
             raise ValueError(f"{self.__class__.__name__} must define a '{self.amount_field}' field.")
+        
 
 
 class BankAccount(BalanceMixin, models.Model):
@@ -326,6 +336,7 @@ class TransferService:
         cls._validate_bank_account(bank_account)
         cls._validate_wallet(wallet)
         cls._is_amount_valid(amount)
+
          # to be added
 
     @classmethod
@@ -334,7 +345,17 @@ class TransferService:
         cls._validate_wallet(wallet)
         cls._is_amount_valid(amount)
 
-        # to be added
+        if not wallet.is_bank_connected:
+            raise BankAccountIsNotConnectedToWalletError()
+        
+        wallet.deduct_amount(amount)
+        bank_account.add_amount(amount)
+        return True
+        
+
+        
+   
+
 
     @classmethod
     def transfer_funds_between_cards(cls, source_card: Card, target_card: Card, amount):
@@ -344,7 +365,9 @@ class TransferService:
 
     @staticmethod
     def _is_amount_valid(amount: float) -> bool:
-        pass
+        if not isinstance(amount, (float, int)):
+            raise TypeError(f"The amount must be type float, int or decimal but got type {type(amount)}")
+        return True
 
     @staticmethod
     def _validate_bank_account(bank_account: BankAccount):
