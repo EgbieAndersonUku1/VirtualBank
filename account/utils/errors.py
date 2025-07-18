@@ -140,3 +140,52 @@ class BankAccountIsNotConnectedToWalletError(CustomBaseError):
     """
     def __init__(self, message="The bank account is not connected to the wallet"):
         super().__init__(message)
+
+class IncorrectBankTypeError(CustomBaseError):
+    """
+    Raised when an object that is not an instance of the expected BankAccount type 
+    is used in a context requiring a valid bank account.
+
+    Typically occurs when validating transaction inputs or initialising
+    bank-related operations that require a BankAccount instance.
+
+    Inherits from:
+        CustomBaseError
+
+    Default message:
+        "Expected a BankAccount instance"
+    """
+    def __init__(self, message="Expected a BankAccount instance"):
+        super().__init__(message)
+
+
+
+class IncorrectWalletTypeError(CustomBaseError):
+    """
+    Raised when an object that is not an instance of the expected Wallet type 
+    is used in a context requiring a valid wallet.
+
+    Typically occurs during transaction handling or wallet initialisation 
+    when a Wallet instance is required.
+
+    Inherits from:
+        CustomBaseError
+
+    Default message:
+        "Expected a Wallet instance"
+    """
+    def __init__(self, message="Expected a Wallet instance"):
+        super().__init__(message)
+
+
+
+class WalletCardLimitExceededError(CustomBaseError):
+    """
+    Raised when the number of cards in a Wallet exceeds the allowed maximum limit.
+
+    This error typically occurs during transaction processing or wallet initialization
+    when enforcing the maximum number of cards a Wallet can hold.
+    """
+
+    def __init__(self, message="The wallet card limit has been exceeded"):
+        super().__init__(message)

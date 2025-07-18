@@ -8,7 +8,9 @@ from utils.generator import generate_code
 from .utils.utils import current_year_choices, profile_to_dict
 from .utils.errors import (BankInsufficientFundsError,
                             WalletInsufficientFundsError, 
-                            BankAccountIsNotConnectedToWalletError
+                            BankAccountIsNotConnectedToWalletError,
+                            IncorrectBankTypeError,
+                            IncorrectWalletTypeError,
                             )
 
 
@@ -127,8 +129,9 @@ class Card(models.Model):
         CREDIT = "C", "Credit"
         DEBIT  = "D", "Debit"
 
+    card_id      = models.CharField(max_length=64, unique=True, db_index=True, blank=True, null=True)
     card_name    = models.CharField(max_length=20)
-    card_number  = models.CharField(max_length=16)
+    card_number  = models.CharField(max_length=20, unique=True, db_index=True)
     expiry_month = models.CharField(choices=Month.choices, max_length=3)
     expiry_year  = models.PositiveBigIntegerField(choices=current_year_choices())
     card_options = models.CharField(choices=Month.choices, max_length=3)
@@ -136,10 +139,10 @@ class Card(models.Model):
     cvc          = models.CharField(max_length=3)
     bank_account = models.ForeignKey(BankAccount, on_delete=models.CASCADE, related_name="card", blank=True, null=True)
     wallet       = models.ForeignKey("Wallet", on_delete=models.SET_NULL, blank=True, null=True, related_name="cards")
-    account      = models.ForeignKey(BankAccount, on_delete=models.CASCADE, related_name="cards")
     created_on   = models.DateTimeField(auto_now_add=True)
     modified_on  = models.DateTimeField(auto_now=True)
 
+ 
   
 
 
@@ -173,6 +176,10 @@ class Wallet(BalanceMixin, models.Model):
     @property
     def username(self):
         return self.user.username
+    
+    @property
+    def num_of_cards_added(self):
+        return self.cards.count()
     
     @classmethod
     def get_by_wallet_id(cls, wallet_id):
@@ -239,7 +246,7 @@ class Wallet(BalanceMixin, models.Model):
         qs = cls.objects.select_related('user', 'bank_account')
         try:
             if field_name == "bank":
-                return qs.filter(bank_account=field_value)
+                return qs.get(bank_account=field_value)
             if field_name == "user":
                 return qs.get(user=field_value)
             if field_name == "wallet_id":
@@ -353,10 +360,6 @@ class TransferService:
         return True
         
 
-        
-   
-
-
     @classmethod
     def transfer_funds_between_cards(cls, source_card: Card, target_card: Card, amount):
         cls._validate_card(source_card)
@@ -371,11 +374,13 @@ class TransferService:
 
     @staticmethod
     def _validate_bank_account(bank_account: BankAccount):
-        pass
+        if not isinstance(bank_account, BankAccount):
+            raise IncorrectBankTypeError()
 
     @staticmethod
     def _validate_wallet(wallet: Wallet):
-        pass
+        if not isinstance(wallet, Wallet):
+            raise IncorrectWalletTypeError()
 
     @staticmethod
     def _validate_card(card: Card):
