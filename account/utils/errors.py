@@ -189,3 +189,17 @@ class WalletCardLimitExceededError(CustomBaseError):
 
     def __init__(self, message="The wallet card limit has been exceeded"):
         super().__init__(message)
+
+
+
+class IncorrectCVCLengthError(CustomBaseError):
+    """
+    Raised when the length of the provided CVC (Card Verification Code) 
+    does not match the expected length.
+
+    This error typically occurs during payment processing or card validation
+    when the CVC fails length validation checks.
+    """
+
+    def __init__(self, message="The CVC length is invalid"):
+        super().__init__(message)

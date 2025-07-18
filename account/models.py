@@ -6,7 +6,7 @@ from decimal import Decimal
 from authentication.models import User
 from utils.generator import generate_code
 from .utils.utils import current_year_choices, profile_to_dict
-from .utils.errors import (BankInsufficientFundsError,
+from .utils.errors import (BankInsufficientFundsError, WalletCardLimitExceededError,
                             WalletInsufficientFundsError, 
                             BankAccountIsNotConnectedToWalletError,
                             IncorrectBankTypeError,
@@ -134,7 +134,7 @@ class Card(models.Model):
     card_number  = models.CharField(max_length=20, unique=True, db_index=True)
     expiry_month = models.CharField(choices=Month.choices, max_length=3)
     expiry_year  = models.PositiveBigIntegerField(choices=current_year_choices())
-    card_options = models.CharField(choices=Month.choices, max_length=3)
+    card_options = models.CharField(choices=CardOptions.choices, max_length=3)
     card_type    = models.CharField(choices=CardType.choices, max_length=1)
     cvc          = models.CharField(max_length=3)
     bank_account = models.ForeignKey(BankAccount, on_delete=models.CASCADE, related_name="card", blank=True, null=True)
@@ -142,6 +142,12 @@ class Card(models.Model):
     created_on   = models.DateTimeField(auto_now_add=True)
     modified_on  = models.DateTimeField(auto_now=True)
 
+    def save(self, *args, **kwargs):
+
+        if self.wallet and self._state.adding: # self._state.adding checks only on creation meaning when the card model is being crated
+            if self.wallet.num_of_cards_added >= self.wallet.maximum_cards:
+                raise WalletCardLimitExceededError("Card limit exceeded.")
+        super().save(*args, **kwargs)
  
   
 

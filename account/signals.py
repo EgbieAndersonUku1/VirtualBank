@@ -2,6 +2,7 @@ import logging
 
 from django.db.models.signals import post_save, pre_save
 from django.db import transaction, IntegrityError
+from django.core.exceptions import ValidationError
 
 from django.dispatch import receiver
 from secrets import token_hex
@@ -16,13 +17,13 @@ logger = logging.getLogger(__name__)
 
 @receiver(pre_save, sender=BankAccount)
 def initialize_bank_account_fields(sender, instance, **kwargs):
+    
     if not instance.bank_id:
         instance.bank_id = token_hex()
     if not instance.account_number:
         instance.account_number = generate_code(9)
     if not instance.sort_code:
         instance.sort_code = generate_code(6)
-
 
 
 
@@ -44,6 +45,7 @@ def create_bank_and_wallet(sender, instance, created, **kwargs):
 
 @receiver(pre_save, sender=Wallet)
 def create_wallet_id(sender, instance, *args, **kwargs):
+
     if instance:
         if not instance.wallet_id:
             instance.wallet_id = token_hex()
@@ -52,6 +54,8 @@ def create_wallet_id(sender, instance, *args, **kwargs):
 
 @receiver(pre_save, sender=Profile)
 def create_profile_id(sender, instance, *args, **kwargs):
+
+    
     if instance:
         if not instance.profile_id:
             instance.profile_id = token_hex()
@@ -65,13 +69,5 @@ def check_if_wallet_card_storage_has_exceeded(sender, instance, *args, **kwargs)
 
     if not instance.card_id:
         instance.card_id = token_hex()
-        
-    if instance.wallet:
-        max_cards     = instance.wallet.maximum_cards
-        current_cards = instance.wallet.total_cards
-
-        if instance.pk is None and current_cards >= max_cards:
-            raise WalletCardLimitExceededError(
-                message=f"The wallet card limit has been exceeded. "
-                        f"Maximum allowed cards: {max_cards}, current cards: {current_cards}."
-            )
+    
+          
