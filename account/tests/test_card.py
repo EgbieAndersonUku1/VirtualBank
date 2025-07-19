@@ -360,6 +360,17 @@ class CardTest(TestCase):
                 wallet=wallet,
             )
 
-        
+    def test_get_by_wallet_method(self):
+        """Test that a card is correctly retrieved usisng the wallet instance"""
+
+        card = Card.get_by_wallet(self.wallet)
+        self.assertIsInstance(card, Card, f"Expected an instance of Card but got {type(card)}")
+
+    def test_get_by_bank_method(self):
+        """Test that a card is correctly retrieved using the bank instance"""
+
+        card = Card.get_by_bank(self.wallet)
+        self.assertIsInstance(card, Card, f"Expected an instance of Card but got {type(card)}")
+
         
 

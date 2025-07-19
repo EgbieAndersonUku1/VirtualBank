@@ -149,7 +149,53 @@ class Card(models.Model):
                 raise WalletCardLimitExceededError("Card limit exceeded.")
         super().save(*args, **kwargs)
  
-  
+
+    @classmethod
+    def get_by_wallet(cls, wallet):
+        return cls._get_by_helper("wallet", wallet)
+
+    @classmethod
+    def get_by_bank(cls, bank):
+        return cls._get_by_helper("bank", bank)
+
+    @classmethod
+    def _get_by_helper(cls, field_name, field_value):
+        """
+        Helper method to retrieve Wallet instances filtered by a specified field.
+
+        This method optimises database access by using `select_related` to 
+        fetch related `wallet` and `BankAccount` objects in the same query, 
+        reducing the number of database hits. This means that the related wallet 
+        and bank account models are retrieved in a single query. Without 
+        `select_related`, accessing `wallet.bank_account` or `wallet.user` after
+        the model has been queried would trigger additional database queries, 
+        leading to the N + 1 query problem.
+
+
+        Args:
+            field_name (str): The field to filter by. Supported values are:
+                - "bank": returns a QuerySet of Wallets filtered by bank_account.
+                - "wallet": returns a single Wallet instance filtered by wallet.
+            field_value: The value to filter the field by.
+
+        Returns:
+            QuerySet or Wallet, bank instance or None:
+                - For "bank": returns a QuerySet of associated with the bank_account.
+                - For "wallet"  returns a single Wallet instance or None if not found.
+
+        Raises:
+            DoesNotExist: returns None or the instance
+        """
+        qs = cls.objects.select_related('wallet', 'bank_account')
+        try:
+            if field_name == "bank":
+                return qs.get(bank_account=field_value)
+            if field_name == "wallet":
+                return qs.get(wallet=field_value)
+
+        except cls.DoesNotExist:
+            return None
+
 
 
 class Wallet(BalanceMixin, models.Model):
