@@ -369,7 +369,7 @@ class CardTest(TestCase):
     def test_get_by_bank_method(self):
         """Test that a card is correctly retrieved using the bank instance"""
 
-        card = Card.get_by_bank(self.wallet)
+        card = Card.get_by_bank(self.bank_account)
         self.assertIsInstance(card, Card, f"Expected an instance of Card but got {type(card)}")
 
         
