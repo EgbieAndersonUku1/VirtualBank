@@ -6,9 +6,11 @@ from decimal import Decimal
 from authentication.models import User
 from utils.generator import generate_code
 from .utils.utils import current_year_choices, profile_to_dict
-from .utils.errors import (BankInsufficientFundsError,
+from .utils.errors import (BankInsufficientFundsError, WalletCardLimitExceededError,
                             WalletInsufficientFundsError, 
-                            BankAccountIsNotConnectedToWalletError
+                            BankAccountIsNotConnectedToWalletError,
+                            IncorrectBankTypeError,
+                            IncorrectWalletTypeError,
                             )
 
 
@@ -127,20 +129,73 @@ class Card(models.Model):
         CREDIT = "C", "Credit"
         DEBIT  = "D", "Debit"
 
+    card_id      = models.CharField(max_length=64, unique=True, db_index=True, blank=True, null=True)
     card_name    = models.CharField(max_length=20)
-    card_number  = models.CharField(max_length=16)
+    card_number  = models.CharField(max_length=20, unique=True, db_index=True)
     expiry_month = models.CharField(choices=Month.choices, max_length=3)
     expiry_year  = models.PositiveBigIntegerField(choices=current_year_choices())
-    card_options = models.CharField(choices=Month.choices, max_length=3)
+    card_options = models.CharField(choices=CardOptions.choices, max_length=3)
     card_type    = models.CharField(choices=CardType.choices, max_length=1)
     cvc          = models.CharField(max_length=3)
     bank_account = models.ForeignKey(BankAccount, on_delete=models.CASCADE, related_name="card", blank=True, null=True)
     wallet       = models.ForeignKey("Wallet", on_delete=models.SET_NULL, blank=True, null=True, related_name="cards")
-    account      = models.ForeignKey(BankAccount, on_delete=models.CASCADE, related_name="cards")
     created_on   = models.DateTimeField(auto_now_add=True)
     modified_on  = models.DateTimeField(auto_now=True)
 
-  
+    def save(self, *args, **kwargs):
+
+        if self.wallet and self._state.adding: # self._state.adding checks only on creation meaning when the card model is being crated
+            if self.wallet.num_of_cards_added >= self.wallet.maximum_cards:
+                raise WalletCardLimitExceededError("Card limit exceeded.")
+        super().save(*args, **kwargs)
+ 
+
+    @classmethod
+    def get_by_wallet(cls, wallet):
+        return cls._get_by_helper("wallet", wallet)
+
+    @classmethod
+    def get_by_bank(cls, bank):
+        return cls._get_by_helper("bank", bank)
+
+    @classmethod
+    def _get_by_helper(cls, field_name, field_value):
+        """
+        Helper method to retrieve Wallet instances filtered by a specified field.
+
+        This method optimises database access by using `select_related` to 
+        fetch related `wallet` and `BankAccount` objects in the same query, 
+        reducing the number of database hits. This means that the related wallet 
+        and bank account models are retrieved in a single query. Without 
+        `select_related`, accessing `wallet.bank_account` or `wallet.user` after
+        the model has been queried would trigger additional database queries, 
+        leading to the N + 1 query problem.
+
+
+        Args:
+            field_name (str): The field to filter by. Supported values are:
+                - "bank": returns a QuerySet of Wallets filtered by bank_account.
+                - "wallet": returns a single Wallet instance filtered by wallet.
+            field_value: The value to filter the field by.
+
+        Returns:
+            QuerySet or Wallet, bank instance or None:
+                - For "bank": returns a QuerySet of associated with the bank_account.
+                - For "wallet"  returns a single Wallet instance or None if not found.
+
+        Raises:
+            DoesNotExist: returns None or the instance
+        """
+        qs = cls.objects.select_related('wallet', 'bank_account')
+        try:
+            if field_name == "bank":
+                return qs.get(bank_account=field_value)
+            if field_name == "wallet":
+                return qs.get(wallet=field_value)
+
+        except cls.DoesNotExist:
+            return None
+
 
 
 class Wallet(BalanceMixin, models.Model):
@@ -173,6 +228,10 @@ class Wallet(BalanceMixin, models.Model):
     @property
     def username(self):
         return self.user.username
+    
+    @property
+    def num_of_cards_added(self):
+        return self.cards.count()
     
     @classmethod
     def get_by_wallet_id(cls, wallet_id):
@@ -239,7 +298,7 @@ class Wallet(BalanceMixin, models.Model):
         qs = cls.objects.select_related('user', 'bank_account')
         try:
             if field_name == "bank":
-                return qs.filter(bank_account=field_value)
+                return qs.get(bank_account=field_value)
             if field_name == "user":
                 return qs.get(user=field_value)
             if field_name == "wallet_id":
@@ -353,10 +412,6 @@ class TransferService:
         return True
         
 
-        
-   
-
-
     @classmethod
     def transfer_funds_between_cards(cls, source_card: Card, target_card: Card, amount):
         cls._validate_card(source_card)
@@ -371,11 +426,13 @@ class TransferService:
 
     @staticmethod
     def _validate_bank_account(bank_account: BankAccount):
-        pass
+        if not isinstance(bank_account, BankAccount):
+            raise IncorrectBankTypeError()
 
     @staticmethod
     def _validate_wallet(wallet: Wallet):
-        pass
+        if not isinstance(wallet, Wallet):
+            raise IncorrectWalletTypeError()
 
     @staticmethod
     def _validate_card(card: Card):

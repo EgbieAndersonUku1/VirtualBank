@@ -13,7 +13,7 @@ from ..utils.errors import BankAccountIsNotConnectedToWalletError
 # Create your tests here.
 
 @freeze_time("2025-07-14 16:00:00")
-class BankAccountTest(TestCase):
+class WalletTest(TestCase):
 
     def setUp(self):
         self.email          = "test@example.com"
@@ -142,7 +142,6 @@ class BankAccountTest(TestCase):
         AMOUNT_TO_TRANSFER              = 50
         EXPECTED_AMOUNT                 = 50
 
-
         bank_account = BankAccount.objects.create(bank_id="#1345678920",
                                                  sort_code="100102",
                                                  account_number="01111001",
@@ -206,5 +205,20 @@ class BankAccountTest(TestCase):
         expected_message  = "The bank account is not connected to the wallet"
         self.assertEqual(exception_message.message, expected_message )
 
+    def test_get_wallet_by_wallet_id_method(self):
+        """Test if the wallet can be retrieved using wallet id"""
 
+        wallet = Wallet.get_by_wallet_id(self.wallet_id)
+        self.assertIsInstance(wallet, Wallet)
+    
+    def test_get_wallet_by_bank_method(self):
+        """Test if the wallet can be retrieved using the bank method"""
+
+        wallet = Wallet.get_by_bank(self.bank_account)
+        self.assertIsInstance(wallet, Wallet)
+
+    def test_get_wallet_by_user_method(self):
+        """Test if the wallet can be retrieved using the user method"""
+        wallet = Wallet.get_by_user(self.user)
+        self.assertIsInstance(wallet, Wallet)
 
