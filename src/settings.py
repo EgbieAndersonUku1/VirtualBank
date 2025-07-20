@@ -48,7 +48,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'jazzmin',
-    
+    'simple_history',
+
     'account.apps.AccountConfig',
     'authentication.apps.AuthenticationConfig',
     'home.apps.HomeConfig',
@@ -71,6 +72,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 
    
 ]

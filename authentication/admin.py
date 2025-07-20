@@ -1,4 +1,4 @@
-from django import forms
+from simple_history.admin import SimpleHistoryAdmin
 from django.contrib import admin
 from .models import User, Verification, EmailLogger
 from .forms import VerificationModelAdminForm
@@ -6,7 +6,7 @@ from .forms import VerificationModelAdminForm
 
 # Register your models here.
 
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(SimpleHistoryAdmin):
     
     list_display       = ["id", "username", "email", "joined_on", "last_login"]
     list_display_links = ["id", "username", "email"]

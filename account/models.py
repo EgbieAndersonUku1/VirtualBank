@@ -1,10 +1,12 @@
 from typing import Optional
 from django.db import models
 from django.core.validators import MinValueValidator
+from simple_history.models import HistoricalRecords
 from decimal import Decimal
 
 from authentication.models import User
 from utils.generator import generate_code
+from utils.utils import mask_number
 from .utils.utils import current_year_choices, profile_to_dict
 from .utils.errors import (BankInsufficientFundsError, WalletCardLimitExceededError,
                             WalletInsufficientFundsError, 
@@ -52,12 +54,14 @@ class BalanceMixin:
 
 class BankAccount(BalanceMixin, models.Model):
     bank_id        = models.CharField(max_length=40, unique=True, db_index=True, blank=True, null=True)
-    sort_code      = models.CharField(max_length=6, unique=True, db_index=True, blank=True)
-    account_number = models.CharField(max_length=8, unique=True, db_index=True, blank=True)
+    sort_code      = models.CharField(max_length=16, unique=True, db_index=True, blank=True)
+    account_number = models.CharField(max_length=16, unique=True, db_index=True, blank=True)
     amount         = models.DecimalField(max_digits=10,decimal_places=2, validators=[MinValueValidator(0)], default=0)
     user           = models.ForeignKey(User, on_delete=models.CASCADE, related_name="account")
     created_on     = models.DateTimeField(auto_now_add=True)
     modified_on    = models.DateTimeField(auto_now=True)
+
+    history        = HistoricalRecords()
 
     class Meta:
         indexes = [
@@ -65,8 +69,16 @@ class BankAccount(BalanceMixin, models.Model):
         ]
 
     def __str__(self):
-        return self.full_account_number
+        return f"Bank #{self.id} ({self.masked_account_number})"
 
+    @property
+    def masked_sort_code(self):
+        return mask_number(self.sort_code, total_length=6, mask_all=True, group_size=2)
+    
+    @property
+    def masked_account_number(self):
+        return mask_number(self.account_number, group_size=4)
+    
     @property
     def username(self):
         return self.user.username
@@ -129,8 +141,9 @@ class Card(models.Model):
         CREDIT = "C", "Credit"
         DEBIT  = "D", "Debit"
 
-    card_id      = models.CharField(max_length=64, unique=True, db_index=True, blank=True, null=True)
+    card_id      = models.CharField(max_length=64, unique=True, db_index=True, blank=True, null=True, editable=False)
     card_name    = models.CharField(max_length=20)
+    amount       = models.DecimalField(max_digits=10,decimal_places=2, validators=[MinValueValidator(0)], default=0)
     card_number  = models.CharField(max_length=20, unique=True, db_index=True)
     expiry_month = models.CharField(choices=Month.choices, max_length=3)
     expiry_year  = models.PositiveBigIntegerField(choices=current_year_choices())
@@ -141,7 +154,12 @@ class Card(models.Model):
     wallet       = models.ForeignKey("Wallet", on_delete=models.SET_NULL, blank=True, null=True, related_name="cards")
     created_on   = models.DateTimeField(auto_now_add=True)
     modified_on  = models.DateTimeField(auto_now=True)
+    history      = HistoricalRecords()
 
+    def __str__(self):
+        if self.card_name:
+            return f"{self.card_name.title()}"
+    
     def save(self, *args, **kwargs):
 
         if self.wallet and self._state.adding: # self._state.adding checks only on creation meaning when the card model is being crated
@@ -149,6 +167,13 @@ class Card(models.Model):
                 raise WalletCardLimitExceededError("Card limit exceeded.")
         super().save(*args, **kwargs)
  
+    @property
+    def masked_card_number(self):
+        return mask_number(self.card_number)
+    
+    @property
+    def masked_cvc(self):
+        return mask_number(self.cvc, total_length=3, mask_all=True, group_size=3)
 
     @classmethod
     def get_by_wallet(cls, wallet):
@@ -208,6 +233,7 @@ class Wallet(BalanceMixin, models.Model):
     bank_account          = models.OneToOneField(BankAccount, models.SET_NULL, blank=True, null=True, db_index=True)
     created_on            = models.DateTimeField(auto_now_add=True)
     modified_on           = models.DateTimeField(auto_now=True)
+    history               = HistoricalRecords()
 
     class Meta:
         indexes = [
@@ -215,7 +241,8 @@ class Wallet(BalanceMixin, models.Model):
         ]
 
     def __str__(self):
-        return self.wallet_id
+        if self.user.username and self.user.email:
+            return f"{self.user.username.title()} ({self.user.email.lower()})"
 
     @property
     def pin(self):
@@ -363,8 +390,9 @@ class Profile(models.Model):
     user                     = models.OneToOneField(User, on_delete=models.CASCADE, unique=True, db_index=True, related_name="profile")
     identification_documents = models.CharField(choices=IdentificationType.choices, max_length=1)
     signature                = models.CharField(choices=Signature.choices, max_length=1)
-    created_on              = models.DateTimeField(auto_now_add=True)
-    modified_on             = models.DateTimeField(auto_now=True)
+    created_on               = models.DateTimeField(auto_now_add=True)
+    modified_on              = models.DateTimeField(auto_now=True)
+    history                  = HistoricalRecords()
 
     def __str__(self):
         if self.first_name and self.surname:

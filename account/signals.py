@@ -27,6 +27,13 @@ def initialize_bank_account_fields(sender, instance, **kwargs):
 
 
 
+@receiver(pre_save, sender=Card)
+def initialize_card_id(sender, instance, **kwargs):
+    
+    if not instance.card_id:
+        instance.card_id = token_hex()
+   
+
 @receiver(post_save, sender=Profile)
 def create_bank_and_wallet(sender, instance, created, **kwargs):
 
