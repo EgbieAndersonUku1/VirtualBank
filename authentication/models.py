@@ -1,6 +1,6 @@
 from django.db import models
-
 from django.utils import timezone
+from simple_history.models import HistoricalRecords
 from datetime import timedelta
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
@@ -53,6 +53,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD    = "email"
     REQUIRED_FIELDS   = ["username", "first_name", "surname"]
     objects           = CustomUser()
+    history           = HistoricalRecords()
     
     def __str__(self):
         return f"{self.first_name.capitalize()} {self.surname.capitalize()}"

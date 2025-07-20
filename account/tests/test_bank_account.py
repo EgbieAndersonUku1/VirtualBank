@@ -50,7 +50,7 @@ class BankAccountTest(TestCase):
         )
     
     def test__str__model(self):
-        expected_str = self.bank_account.full_account_number
+        expected_str = f"Bank #{self.bank_account.id} ({self.bank_account.masked_account_number})"
         self.assertEqual(str(self.bank_account), expected_str)
 
     def test_username_property_returns_user_username(self):
