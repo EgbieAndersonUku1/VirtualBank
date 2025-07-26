@@ -1,5 +1,4 @@
-import { Wallet } from "./wallet.js";
-import { BankAccount } from "./bankAccount.js";
+
 import { profileCache } from "./formUtils.js";
 import { handlePinShowage, handlePinFormSubmission, handlePinFormClosure } from "./pin.js";
 import { handleCardFormSubmission, showCardInUIWallet } from "./add-new-card.js";
@@ -38,51 +37,19 @@ profileCache.setStorageKey(config.PROFILE_KEY);
 notificationManager.setKey(config.NOTIFICATION_KEY);
 
 
-let bankAccount;
-let wallet;
 
 
 document.addEventListener("DOMContentLoaded", handleInitialSetup);
 
 
 
+let wallet;
 
 function handleInitialSetup() {
-    
-    console.log("Attempting to retrieve bank account information from localStorage...");
 
-    bankAccount = BankAccount.getByAccount(config.SORT_CODE, config.ACCOUNT_NUMBER);
-    
-    if (!bankAccount) {
-        console.log("Retrieval failed - Bank account not found. Creating a new bank account...");
-        bankAccount = BankAccount.createBankAccount(config.SORT_CODE, config.ACCOUNT_NUMBER, config.INITIAL_BALANCE);
-    } else {
-        console.log("Bank account successfully retrieved from localStorage.");
-    }
-
-    if (bankAccount) {
-        console.log("Bank account successfully loaded into the system.");
-        console.log("Attempting to retrieve linked wallet from localStorage...");
-        wallet = Wallet.loadWallet(bankAccount.sortCode, bankAccount.accountNumber);
-
-        if (!wallet) {
-            console.log("Retrieval failed - Wallet not found. Creating a new wallet...");
-            wallet = Wallet.createWallet(bankAccount, config.PIN, config.INITIAL_BALANCE);
-        } else {
-            console.log("Wallet successfully retrieved from localStorage and loaded into the system.");
-        }
-    }
-
-    if (!wallet || !bankAccount) {
-        logError("handleInitialSetup", "Failed to load the bank account and wallet.");
-        return;
-    }
-
-    console.log("Wallet and bank account successfully loaded.");
-
-    loadUserCardsInUI(wallet);
-    updateAllWalletDashoardText(wallet)
-    updateCardStateObjectWithBlockCards();
+    // loadUserCardsInUI(wallet);
+    // updateAllWalletDashoardText(wallet)
+    // updateCardStateObjectWithBlockCards();
 }
 
 

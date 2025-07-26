@@ -1,5 +1,4 @@
 import { Card } from "./card.js";
-import { BankAccount } from "./bankAccount.js";
 import { DataStorage } from "./baseDataStorage.js";
 import { AmountManager } from "./baseAmountManager.js";
 import { checkNumber, generateRandomID, excludeKey, formatCurrency } from "./utils.js";
@@ -16,7 +15,6 @@ export class Wallet extends DataStorage {
 
     /**
    * Constructs a new Wallet instance.
-   * @param {object | BankAccount}  - An instance of the BankAccount class.
    * @param {number|null} lastTransfer - The last transfer amount made by the wallet (default: null).
    * @param {number|null} lastAmountReceived - The last amount received by the wallet (default: null).
    * @param {string|null} pin - The PIN associated with the wallet (default: null).

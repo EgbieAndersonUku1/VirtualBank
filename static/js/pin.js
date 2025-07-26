@@ -1,5 +1,5 @@
 
-import { checkIfHTMLElement, dimBackground } from "./utils.js";
+import { checkIfHTMLElement } from "./utils.js";
 import { sanitizeText } from "./utils.js";
 import { Wallet } from "./wallet.js";
 import { logError } from "./logger.js";
@@ -9,7 +9,6 @@ import { handleFundDiv } from "./fund-account.js";
 import { config } from "./config.js";
 import { AlertUtils } from "./alerts.js";
 import { openWindowsState } from "./config.js";
-import fetchData from "./fetch.js";
 
 
 const ADD_FUNDS_ID     = "add-funds";
@@ -40,24 +39,17 @@ pinElement.addEventListener("submit", handlePinFormSubmission);
 
 
 
-let PIN_ENTERED = false;
 
 export function handlePinShowage(e, wallet) {
 
    const id = e.target.id;
 
-  
    
    if (id !== ADD_FUNDS_ID && id !== ADD_NEW_CARD && id !== TRANSFER_FUNDS && id !== REMOVE_CARD) {
         return false;
    }
 
-   if (!PIN_ENTERED) {
-        showPinErrorMsg('', false);
-        pinElement.classList.add("show");
-        dimBackground(dimBackgroundElement, true);
-        return true;
-   }
+ 
 
    if (id === ADD_NEW_CARD) {
         if (openWindowsState.isCardManagerWindowOpen) {
@@ -65,7 +57,6 @@ export function handlePinShowage(e, wallet) {
             return true;
         }
 
-        dimBackground(dimBackgroundElement, true);
         showNewCardForm(e);
         openWindowsState.isAddNewCardWindowOpen = true;
         closeDivs([removeCardsDivElement, addFundsDivElement, transferDivElement])
@@ -125,7 +116,6 @@ export function handlePinShowage(e, wallet) {
         openWindowsState.isAddFundsWindowOpen     = false;
         openWindowsState.isRemoveCardWindowOpen   = false;
         
-        dimBackground(dimBackgroundElement, true);
         transferDivElement.classList.add("show");
         closeDivs([addNewCardDivElement, addFundsDivElement, removeCardsDivElement ]);
         
@@ -134,7 +124,7 @@ export function handlePinShowage(e, wallet) {
 }
 
 
-export function handlePinFormSubmission(e, wallet) {
+export function handlePinFormSubmission(e) {
     
     if (e.target.id == null) {
         return;
@@ -142,10 +132,6 @@ export function handlePinFormSubmission(e, wallet) {
     e.preventDefault();
     const TIME_IN_MS = 1000;
 
-    if (!(wallet instanceof Wallet)) {
-        logError("handlePinFormSubmission", "The wallet instance is not an instance of Wallet");
-        return;
-    }
     
     const formData  = new FormData(pinFormElement);
     const pin       = formData.get("pin");
@@ -155,16 +141,7 @@ export function handlePinFormSubmission(e, wallet) {
         return;
     }
 
-    const isCorrect = wallet.verifyPin(pin);
-
-    if (!isCorrect)  {
-        const msg = "The pin entered is incorrect";
-        showUnlockIcon(isCorrect);
-        showInputErrorColor();
-        showPinErrorMsg(msg);
-        return;
-    } 
-
+  
     showUnlockIcon(isCorrect);
     showInputErrorColor(false);
     showPinErrorMsg('', false);
@@ -173,7 +150,7 @@ export function handlePinFormSubmission(e, wallet) {
         PIN_ENTERED = true;
         setTimeout(() => {
             removePinForm();
-
+            return pin;
             }, TIME_IN_MS);
         
     }
@@ -228,7 +205,6 @@ function showPinErrorMsg(msg, show=true) {
 
 
 function removePinForm() {
-    dimBackground(dimBackgroundElement);
     pinElement.classList.remove("show");
 }
 

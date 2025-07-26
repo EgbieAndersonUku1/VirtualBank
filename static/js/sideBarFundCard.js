@@ -33,17 +33,16 @@ export function handleAddFundToCardFormButtonClick(e) {
             const parsedData = parseFormData(formData, required);
 
             const resp = handleAddFundingToCard(parsedData);
-            if (resp) {
-                AlertUtils.showAlert({
-                    title: "Card successfully funded",
-                    text: "Your card was successfully funded",
-                    icon: "success",
-                    confirmButtonText: "Great",
-                })
-            }
+            // if (resp) {
+            //     AlertUtils.showAlert({
+            //         title: "Card successfully funded",
+            //         text: "Your card was successfully funded",
+            //         icon: "success",
+            //         confirmButtonText: "Great",
+            //     })
+            // }
 
-            const wallet = Wallet.loadWallet(config.SORT_CODE, config.ACCOUNT_NUMBER);
-            walletDashboard.updateTotalCardAmountText(wallet);
+          
 
         } else {
             fundMyCardFormElement.reportValidity();
